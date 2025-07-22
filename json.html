@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON对比 - 工具聚合网站</title>
+  <link rel="stylesheet" href="public/css/tailwind.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .json-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    .json-editors {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    .json-editor {
+      width: 100%;
+      height: 300px;
+      font-family: monospace;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      background-color: var(--background);
+      color: var(--text);
+      resize: vertical;
+    }
+    
+    .json-result {
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      background-color: var(--background-alt);
+      font-family: monospace;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      min-height: 100px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .json-added {
+      background-color: rgba(16, 185, 129, 0.1);
+      color: var(--secondary);
+    }
+    
+    .json-removed {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+    }
+    
+    .json-modified {
+      background-color: rgba(59, 130, 246, 0.1);
+      color: var(--primary);
+    }
+    
+    .json-controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    .json-examples {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <div class="json-container">
+      <h1 class="text-2xl font-bold mb-4">JSON对比工具</h1>
+      
+      <!-- JSON编辑器 -->
+      <div class="json-editors">
+        <div>
+          <h3 class="font-semibold mb-2">左侧JSON</h3>
+          <textarea id="json-left" class="json-editor" placeholder="在此输入JSON数据..."></textarea>
+        </div>
+        <div>
+          <h3 class="font-semibold mb-2">右侧JSON</h3>
+          <textarea id="json-right" class="json-editor" placeholder="在此输入JSON数据..."></textarea>
+        </div>
+      </div>
+      
+      <!-- 控制按钮 -->
+      <div class="json-controls">
+        <button id="compare-btn" class="btn btn-primary">
+          <i class="fas fa-code-compare mr-2"></i>对比
+        </button>
+        <button id="clear-btn" class="btn btn-outline">
+          <i class="fas fa-eraser mr-2"></i>清空
+        </button>
+        <button id="copy-btn" class="btn btn-secondary">
+          <i class="fas fa-copy mr-2"></i>复制结果
+        </button>
+      </div>
+      
+      <!-- 示例按钮 -->
+      <div class="json-examples">
+        <button id="example-btn" class="btn btn-outline">
+          <i class="fas fa-lightbulb mr-2"></i>加载示例
+        </button>
+      </div>
+      
+      <!-- 结果显示 -->
+      <div>
+        <h3 class="font-semibold my-2">对比结果</h3>
+        <div id="json-result" class="json-result">
+          <div class="text-center text-text-light">
+            <i class="fas fa-code text-4xl mb-4 opacity-50"></i>
+            <p>请输入JSON数据并点击对比按钮</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 提示容器 -->
+    <div id="alert-container" class="fixed top-4 right-4"></div>
+  </div>
+
+  <script src="public/js/main.js"></script>
+  <script>
+    // DOM元素
+    const jsonLeft = document.getElementById('json-left');
+    const jsonRight = document.getElementById('json-right');
+    const compareBtn = document.getElementById('compare-btn');
+    const clearBtn = document.getElementById('clear-btn');
+    const copyBtn = document.getElementById('copy-btn');
+    const exampleBtn = document.getElementById('example-btn');
+    const jsonResult = document.getElementById('json-result');
+    
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      
+      // 恢复上次的输入
+      const savedLeft = localStorage.getItem('jsonLeft');
+      const savedRight = localStorage.getItem('jsonRight');
+      
+      if (savedLeft) jsonLeft.value = savedLeft;
+      if (savedRight) jsonRight.value = savedRight;
+    });
+    
+    // 对比按钮点击事件
+    compareBtn.addEventListener('click', () => {
+      try {
+        const leftValue = jsonLeft.value.trim();
+        const rightValue = jsonRight.value.trim();
+        
+        if (!leftValue || !rightValue) {
+          showAlert('请在两侧都输入JSON数据', 'error');
+          return;
+        }
+        
+        const leftJson = JSON.parse(leftValue);
+        const rightJson = JSON.parse(rightValue);
+        
+        // 保存到本地存储
+        localStorage.setItem('jsonLeft', leftValue);
+        localStorage.setItem('jsonRight', rightValue);
+        
+        // 执行对比
+        const diff = compareJson(leftJson, rightJson);
+        
+        // 显示结果
+        if (Object.keys(diff).length === 0) {
+          jsonResult.innerHTML = '<div class="text-center text-secondary"><i class="fas fa-check-circle text-4xl mb-4"></i><p>两个JSON数据完全相同</p></div>';
+        } else {
+          jsonResult.innerHTML = formatDiff(diff);
+        }
+      } catch (error) {
+        showAlert('JSON解析错误: ' + error.message, 'error');
+      }
+    });
+    
+    // 清空按钮点击事件
+    clearBtn.addEventListener('click', () => {
+      jsonLeft.value = '';
+      jsonRight.value = '';
+      jsonResult.innerHTML = '<div class="text-center text-text-light"><i class="fas fa-code text-4xl mb-4 opacity-50"></i><p>请输入JSON数据并点击对比按钮</p></div>';
+      localStorage.removeItem('jsonLeft');
+      localStorage.removeItem('jsonRight');
+      showAlert('已清空所有输入', 'info');
+    });
+    
+    // 复制按钮点击事件
+    copyBtn.addEventListener('click', () => {
+      const resultText = jsonResult.textContent;
+      if (resultText && !resultText.includes('请输入JSON数据')) {
+        navigator.clipboard.writeText(resultText).then(() => {
+          showAlert('已复制到剪贴板', 'success');
+        }).catch(err => {
+          showAlert('复制失败: ' + err, 'error');
+        });
+      } else {
+        showAlert('没有可复制的结果', 'info');
+      }
+    });
+    
+    // 示例按钮点击事件
+    exampleBtn.addEventListener('click', () => {
+      const exampleLeft = {
+        "name": "工具聚合网站",
+        "version": "1.0",
+        "tools": [
+          "todo",
+          "json"
+        ],
+        "author": "开发者",
+        "settings": {
+          "theme": "light",
+          "language": "zh-CN"
+        }
+      };
+      
+      const exampleRight = {
+        "name": "工具聚合网站",
+        "version": "1.1",
+        "tools": [
+          "todo",
+          "json",
+          "jwt"
+        ],
+        "author": "开发团队",
+        "settings": {
+          "theme": "dark",
+          "language": "zh-CN",
+          "notifications": true
+        }
+      };
+      
+      jsonLeft.value = JSON.stringify(exampleLeft, null, 2);
+      jsonRight.value = JSON.stringify(exampleRight, null, 2);
+      
+      // 触发对比
+      compareBtn.click();
+    });
+    
+    // JSON对比函数
+    function compareJson(left, right, path = '') {
+      const diff = {};
+      
+      // 检查左侧对象中的所有键
+      for (const key in left) {
+        const currentPath = path ? `${path}.${key}` : key;
+        
+        // 如果右侧没有这个键
+        if (!(key in right)) {
+          diff[currentPath] = {
+            type: 'removed',
+            value: left[key]
+          };
+          continue;
+        }
+        
+        // 如果两边的值类型不同
+        if (typeof left[key] !== typeof right[key]) {
+          diff[currentPath] = {
+            type: 'modified',
+            oldValue: left[key],
+            newValue: right[key]
+          };
+          continue;
+        }
+        
+        // 如果是对象，递归比较
+        if (typeof left[key] === 'object' && left[key] !== null && right[key] !== null) {
+          // 数组特殊处理
+          if (Array.isArray(left[key]) && Array.isArray(right[key])) {
+            // 比较数组长度
+            const maxLength = Math.max(left[key].length, right[key].length);
+            for (let i = 0; i < maxLength; i++) {
+              const arrayPath = `${currentPath}[${i}]`;
+              
+              // 如果左侧数组没有这个索引
+              if (i >= left[key].length) {
+                diff[arrayPath] = {
+                  type: 'added',
+                  value: right[key][i]
+                };
+                continue;
+              }
+              
+              // 如果右侧数组没有这个索引
+              if (i >= right[key].length) {
+                diff[arrayPath] = {
+                  type: 'removed',
+                  value: left[key][i]
+                };
+                continue;
+              }
+              
+              // 如果两边的值类型不同
+              if (typeof left[key][i] !== typeof right[key][i]) {
+                diff[arrayPath] = {
+                  type: 'modified',
+                  oldValue: left[key][i],
+                  newValue: right[key][i]
+                };
+                continue;
+              }
+              
+              // 如果是对象，递归比较
+              if (typeof left[key][i] === 'object' && left[key][i] !== null && right[key][i] !== null) {
+                const nestedDiff = compareJson(left[key][i], right[key][i], arrayPath);
+                Object.assign(diff, nestedDiff);
+              }
+              // 如果是基本类型且不同
+              else if (left[key][i] !== right[key][i]) {
+                diff[arrayPath] = {
+                  type: 'modified',
+                  oldValue: left[key][i],
+                  newValue: right[key][i]
+                };
+              }
+            }
+          } else {
+            // 对象递归比较
+            const nestedDiff = compareJson(left[key], right[key], currentPath);
+            Object.assign(diff, nestedDiff);
+          }
+        }
+        // 如果是基本类型且不同
+        else if (left[key] !== right[key]) {
+          diff[currentPath] = {
+            type: 'modified',
+            oldValue: left[key],
+            newValue: right[key]
+          };
+        }
+      }
+      
+      // 检查右侧对象中的新增键
+      for (const key in right) {
+        const currentPath = path ? `${path}.${key}` : key;
+        
+        // 如果左侧没有这个键
+        if (!(key in left)) {
+          diff[currentPath] = {
+            type: 'added',
+            value: right[key]
+          };
+        }
+      }
+      
+      return diff;
+    }
+    
+    // 格式化差异结果
+    function formatDiff(diff) {
+      let html = '';
+      
+      for (const path in diff) {
+        const item = diff[path];
+        
+        switch (item.type) {
+          case 'added':
+            html += `<div class="json-added">+ ${path}: ${formatValue(item.value)}</div>`;
+            break;
+          case 'removed':
+            html += `<div class="json-removed">- ${path}: ${formatValue(item.value)}</div>`;
+            break;
+          case 'modified':
+            html += `<div class="json-modified">~ ${path}: ${formatValue(item.oldValue)} → ${formatValue(item.newValue)}</div>`;
+            break;
+        }
+      }
+      
+      return html || '<div class="text-center">没有发现差异</div>';
+    }
+    
+    // 格式化值
+    function formatValue(value) {
+      if (value === null) return 'null';
+      if (value === undefined) return 'undefined';
+      if (typeof value === 'object') return JSON.stringify(value);
+      if (typeof value === 'string') return `"${value}"`;
+      return value.toString();
+    }
+    
+    // 显示提示
+    function showAlert(message, type = 'info') {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type}`;
+      alertDiv.textContent = message;
+      
+      const alertContainer = document.getElementById('alert-container');
+      alertContainer.appendChild(alertDiv);
+      
+      // 3秒后自动移除
+      setTimeout(() => {
+        alertDiv.remove();
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

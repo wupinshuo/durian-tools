@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>工具聚合网站</title>
+    <link rel="stylesheet" href="public/css/tailwind.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .tool-preview {
+        margin-top: 2rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        overflow: hidden;
+      }
+
+      .tool-preview-header {
+        padding: 0.75rem 1rem;
+        background-color: var(--background-alt);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .tool-preview-content {
+        height: 600px;
+        overflow: hidden;
+      }
+
+      #first-visit-guide {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .guide-content {
+        background-color: var(--background);
+        border-radius: 0.5rem;
+        padding: 2rem;
+        max-width: 500px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 首次访问指南 -->
+    <div id="first-visit-guide" class="hidden">
+      <div class="guide-content">
+        <h2 class="text-xl font-bold mb-4">欢迎使用工具聚合网站</h2>
+        <p class="mb-4">这是一个集合多种实用工具的平台，目前包含以下功能：</p>
+        <ul class="mb-4 ml-4">
+          <li class="mb-2">
+            <i class="fas fa-check-circle text-primary mr-2"></i> 待办事项管理
+          </li>
+          <li class="mb-2">
+            <i class="fas fa-code text-primary mr-2"></i> JSON格式对比
+          </li>
+          <li class="mb-2">
+            <i class="fas fa-key text-primary mr-2"></i> JWT令牌解析
+          </li>
+        </ul>
+        <p class="mb-4">点击下方的工具卡片即可开始使用对应的工具。</p>
+        <button id="close-guide" class="btn btn-primary w-full">
+          开始使用
+        </button>
+      </div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+      <div class="container flex justify-between items-center">
+        <a href="index.html" class="navbar-brand">工具聚合网站</a>
+        <div class="navbar-nav">
+          <button class="theme-toggle btn btn-outline">
+            <span class="theme-toggle-icon">🌙</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 主内容 -->
+    <main class="container py-4">
+      <h1 class="text-2xl font-bold mb-4">实用工具集合</h1>
+
+      <!-- 工具卡片网格 -->
+      <div class="tools-grid">
+        <!-- 待办事项工具 -->
+        <div class="tool-card" data-tool="todo">
+          <div class="tool-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h3 class="tool-title">待办事项</h3>
+          <p class="tool-description">创建和管理您的待办事项清单</p>
+        </div>
+
+        <!-- JSON对比工具 -->
+        <div class="tool-card" data-tool="json">
+          <div class="tool-icon">
+            <i class="fas fa-code"></i>
+          </div>
+          <h3 class="tool-title">JSON对比</h3>
+          <p class="tool-description">比较两个JSON数据的差异</p>
+        </div>
+
+        <!-- JWT解析工具 -->
+        <div class="tool-card" data-tool="jwt">
+          <div class="tool-icon">
+            <i class="fas fa-key"></i>
+          </div>
+          <h3 class="tool-title">JWT解析</h3>
+          <p class="tool-description">解析JWT令牌的内容</p>
+        </div>
+
+        <!-- 更多工具（即将推出） -->
+        <div class="tool-card opacity-50">
+          <div class="tool-icon">
+            <i class="fas fa-plus"></i>
+          </div>
+          <h3 class="tool-title">更多工具</h3>
+          <p class="tool-description">即将推出更多实用工具</p>
+        </div>
+      </div>
+
+      <!-- 工具预览 -->
+      <div class="tool-preview">
+        <div class="tool-preview-header">
+          <h2 class="font-semibold">工具预览</h2>
+          <div id="alert-container"></div>
+        </div>
+        <div class="tool-preview-content">
+          <iframe
+            id="tool-frame"
+            class="w-full h-full"
+            src="todo.html"
+          ></iframe>
+        </div>
+      </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2025 工具聚合网站</p>
+      </div>
+    </footer>
+
+    <script src="public/js/main.js"></script>
+  </body>
+</html>

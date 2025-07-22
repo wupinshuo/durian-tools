@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>待办事项 - 工具聚合网站</title>
+  <link rel="stylesheet" href="public/css/tailwind.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .todo-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .todo-list {
+      margin-top: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+    
+    .todo-item {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+    }
+    
+    .todo-item:last-child {
+      border-bottom: none;
+    }
+    
+    .todo-checkbox {
+      margin-right: 1rem;
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 2px solid var(--border);
+      border-radius: 0.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .todo-checkbox.checked {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+    
+    .todo-text {
+      flex: 1;
+      font-size: 1rem;
+    }
+    
+    .todo-text.completed {
+      text-decoration: line-through;
+      color: var(--text-light);
+    }
+    
+    .todo-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .todo-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: var(--text-light);
+    }
+    
+    .empty-state {
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-light);
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <div class="todo-container">
+      <h1 class="text-2xl font-bold mb-4">待办事项</h1>
+      
+      <!-- 添加待办事项表单 -->
+      <form id="todo-form" class="flex gap-2">
+        <input type="text" id="todo-input" class="input flex-1" placeholder="添加新的待办事项..." required>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-plus mr-2"></i>添加
+        </button>
+      </form>
+      
+      <!-- 待办事项列表 -->
+      <div class="todo-list">
+        <div id="todo-items">
+          <!-- 待办事项将通过JavaScript动态添加 -->
+          <div class="empty-state">
+            <i class="fas fa-clipboard-list text-4xl mb-4 opacity-50"></i>
+            <p>暂无待办事项</p>
+            <p class="text-sm mt-2">添加一些待办事项开始使用吧</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 待办事项统计 -->
+      <div class="todo-stats">
+        <div>已完成: <span id="completed-count">0</span></div>
+        <div>待完成: <span id="pending-count">0</span></div>
+      </div>
+      
+      <!-- 操作按钮 -->
+      <div class="flex justify-between mt-4">
+        <button id="clear-completed" class="btn btn-outline">
+          <i class="fas fa-trash-alt mr-2"></i>清除已完成
+        </button>
+        <button id="clear-all" class="btn btn-danger">
+          <i class="fas fa-trash mr-2"></i>清除全部
+        </button>
+      </div>
+    </div>
+    
+    <!-- 提示容器 -->
+    <div id="alert-container" class="fixed top-4 right-4"></div>
+  </div>
+
+  <script src="public/js/main.js"></script>
+  <script>
+    // 待办事项数据
+    let todos = JSON.parse(localStorage.getItem('todos')) || [];
+    
+    // DOM元素
+    const todoForm = document.getElementById('todo-form');
+    const todoInput = document.getElementById('todo-input');
+    const todoItems = document.getElementById('todo-items');
+    const completedCount = document.getElementById('completed-count');
+    const pendingCount = document.getElementById('pending-count');
+    const clearCompleted = document.getElementById('clear-completed');
+    const clearAll = document.getElementById('clear-all');
+    
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      renderTodos();
+      updateStats();
+    });
+    
+    // 添加待办事项
+    todoForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = todoInput.value.trim();
+      if (text) {
+        const newTodo = {
+          id: Date.now().toString(),
+          text,
+          completed: false,
+          createdAt: new Date()
+        };
+        
+        todos.push(newTodo);
+        saveTodos();
+        renderTodos();
+        updateStats();
+        
+        todoInput.value = '';
+        showAlert('待办事项已添加', 'success');
+      }
+    });
+    
+    // 清除已完成
+    clearCompleted.addEventListener('click', () => {
+      const completedTodos = todos.filter(todo => todo.completed);
+      if (completedTodos.length === 0) {
+        showAlert('没有已完成的待办事项', 'info');
+        return;
+      }
+      
+      todos = todos.filter(todo => !todo.completed);
+      saveTodos();
+      renderTodos();
+      updateStats();
+      showAlert('已清除已完成的待办事项', 'success');
+    });
+    
+    // 清除全部
+    clearAll.addEventListener('click', () => {
+      if (todos.length === 0) {
+        showAlert('没有待办事项可清除', 'info');
+        return;
+      }
+      
+      if (confirm('确定要清除所有待办事项吗？')) {
+        todos = [];
+        saveTodos();
+        renderTodos();
+        updateStats();
+        showAlert('已清除所有待办事项', 'success');
+      }
+    });
+    
+    // 渲染待办事项列表
+    function renderTodos() {
+      if (todos.length === 0) {
+        todoItems.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-clipboard-list text-4xl mb-4 opacity-50"></i>
+            <p>暂无待办事项</p>
+            <p class="text-sm mt-2">添加一些待办事项开始使用吧</p>
+          </div>
+        `;
+        return;
+      }
+      
+      todoItems.innerHTML = '';
+      todos.forEach(todo => {
+        const todoItem = document.createElement('div');
+        todoItem.className = 'todo-item';
+        todoItem.innerHTML = `
+          <div class="todo-checkbox ${todo.completed ? 'checked' : ''}" data-id="${todo.id}">
+            ${todo.completed ? '<i class="fas fa-check"></i>' : ''}
+          </div>
+          <div class="todo-text ${todo.completed ? 'completed' : ''}">${todo.text}</div>
+          <div class="todo-actions">
+            <button class="btn btn-outline edit-todo" data-id="${todo.id}">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-danger delete-todo" data-id="${todo.id}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        `;
+        
+        todoItems.appendChild(todoItem);
+        
+        // 绑定复选框点击事件
+        const checkbox = todoItem.querySelector('.todo-checkbox');
+        checkbox.addEventListener('click', () => {
+          toggleTodoCompleted(todo.id);
+        });
+        
+        // 绑定编辑按钮点击事件
+        const editBtn = todoItem.querySelector('.edit-todo');
+        editBtn.addEventListener('click', () => {
+          editTodo(todo.id);
+        });
+        
+        // 绑定删除按钮点击事件
+        const deleteBtn = todoItem.querySelector('.delete-todo');
+        deleteBtn.addEventListener('click', () => {
+          deleteTodo(todo.id);
+        });
+      });
+    }
+    
+    // 切换待办事项完成状态
+    function toggleTodoCompleted(id) {
+      const todo = todos.find(t => t.id === id);
+      if (todo) {
+        todo.completed = !todo.completed;
+        saveTodos();
+        renderTodos();
+        updateStats();
+        showAlert(`待办事项已${todo.completed ? '完成' : '取消完成'}`, 'success');
+      }
+    }
+    
+    // 编辑待办事项
+    function editTodo(id) {
+      const todo = todos.find(t => t.id === id);
+      if (todo) {
+        const newText = prompt('编辑待办事项', todo.text);
+        if (newText !== null && newText.trim() !== '') {
+          todo.text = newText.trim();
+          saveTodos();
+          renderTodos();
+          showAlert('待办事项已更新', 'success');
+        }
+      }
+    }
+    
+    // 删除待办事项
+    function deleteTodo(id) {
+      if (confirm('确定要删除这个待办事项吗？')) {
+        todos = todos.filter(todo => todo.id !== id);
+        saveTodos();
+        renderTodos();
+        updateStats();
+        showAlert('待办事项已删除', 'success');
+      }
+    }
+    
+    // 更新统计信息
+    function updateStats() {
+      const completed = todos.filter(todo => todo.completed).length;
+      const pending = todos.length - completed;
+      
+      completedCount.textContent = completed;
+      pendingCount.textContent = pending;
+    }
+    
+    // 保存待办事项到本地存储
+    function saveTodos() {
+      localStorage.setItem('todos', JSON.stringify(todos));
+    }
+    
+    // 显示提示
+    function showAlert(message, type = 'info') {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type}`;
+      alertDiv.textContent = message;
+      
+      const alertContainer = document.getElementById('alert-container');
+      alertContainer.appendChild(alertDiv);
+      
+      // 3秒后自动移除
+      setTimeout(() => {
+        alertDiv.remove();
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

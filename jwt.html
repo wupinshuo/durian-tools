@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JWT解析 - 工具聚合网站</title>
+  <link rel="stylesheet" href="public/css/tailwind.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .jwt-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .jwt-input-container {
+      margin-bottom: 1rem;
+    }
+    
+    .jwt-input {
+      width: 100%;
+      font-family: monospace;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      background-color: var(--background);
+      color: var(--text);
+      resize: vertical;
+      min-height: 100px;
+    }
+    
+    .jwt-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .jwt-section-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .jwt-section-title i {
+      margin-right: 0.5rem;
+    }
+    
+    .jwt-payload {
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      background-color: var(--background-alt);
+      font-family: monospace;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+    
+    .jwt-controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .jwt-examples {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .jwt-result {
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      overflow: hidden;
+    }
+    
+    .jwt-result-header {
+      padding: 0.75rem 1rem;
+      background-color: var(--background-alt);
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+    
+    .jwt-result-content {
+      padding: 1rem;
+    }
+    
+    .jwt-expired {
+      color: var(--danger);
+      font-weight: 600;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .jwt-expired i {
+      margin-right: 0.5rem;
+    }
+    
+    .jwt-valid {
+      color: var(--secondary);
+      font-weight: 600;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .jwt-valid i {
+      margin-right: 0.5rem;
+    }
+    
+    .jwt-time {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-light);
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-4">
+    <div class="jwt-container">
+      <h1 class="text-2xl font-bold mb-4">JWT解析工具</h1>
+      
+      <!-- JWT输入 -->
+      <div class="jwt-input-container">
+        <h3 class="font-semibold mb-2">JWT令牌</h3>
+        <textarea id="jwt-input" class="jwt-input" placeholder="在此输入JWT令牌..."></textarea>
+      </div>
+      
+      <!-- 控制按钮 -->
+      <div class="jwt-controls">
+        <button id="decode-btn" class="btn btn-primary">
+          <i class="fas fa-key mr-2"></i>解析
+        </button>
+        <button id="clear-btn" class="btn btn-outline">
+          <i class="fas fa-eraser mr-2"></i>清空
+        </button>
+        <button id="copy-header-btn" class="btn btn-secondary">
+          <i class="fas fa-copy mr-2"></i>复制头部
+        </button>
+        <button id="copy-payload-btn" class="btn btn-secondary">
+          <i class="fas fa-copy mr-2"></i>复制载荷
+        </button>
+      </div>
+      
+      <!-- 示例按钮 -->
+      <div class="jwt-examples">
+        <button id="example-btn" class="btn btn-outline">
+          <i class="fas fa-lightbulb mr-2"></i>加载示例
+        </button>
+      </div>
+      
+      <!-- 解析结果 -->
+      <div id="jwt-result" class="hidden">
+        <h3 class="font-semibold my-2">解析结果</h3>
+        
+        <!-- 头部 -->
+        <div class="jwt-section">
+          <div class="jwt-result">
+            <div class="jwt-result-header">
+              <i class="fas fa-file-code mr-2"></i>头部 (Header)
+            </div>
+            <div class="jwt-result-content">
+              <pre id="jwt-header" class="jwt-payload"></pre>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 载荷 -->
+        <div class="jwt-section">
+          <div class="jwt-result">
+            <div class="jwt-result-header">
+              <i class="fas fa-database mr-2"></i>载荷 (Payload)
+            </div>
+            <div class="jwt-result-content">
+              <pre id="jwt-payload" class="jwt-payload"></pre>
+              <div id="jwt-expiry"></div>
+              <div id="jwt-time" class="jwt-time"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 签名 -->
+        <div class="jwt-section">
+          <div class="jwt-result">
+            <div class="jwt-result-header">
+              <i class="fas fa-signature mr-2"></i>签名 (Signature)
+            </div>
+            <div class="jwt-result-content">
+              <div id="jwt-signature" class="jwt-payload"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 空状态 -->
+      <div id="jwt-empty" class="text-center p-4">
+        <i class="fas fa-key text-4xl mb-4 opacity-50"></i>
+        <p>请输入JWT令牌并点击解析按钮</p>
+      </div>
+    </div>
+    
+    <!-- 提示容器 -->
+    <div id="alert-container" class="fixed top-4 right-4"></div>
+  </div>
+
+  <script src="public/js/main.js"></script>
+  <script>
+    // DOM元素
+    const jwtInput = document.getElementById('jwt-input');
+    const decodeBtn = document.getElementById('decode-btn');
+    const clearBtn = document.getElementById('clear-btn');
+    const copyHeaderBtn = document.getElementById('copy-header-btn');
+    const copyPayloadBtn = document.getElementById('copy-payload-btn');
+    const exampleBtn = document.getElementById('example-btn');
+    const jwtResult = document.getElementById('jwt-result');
+    const jwtEmpty = document.getElementById('jwt-empty');
+    const jwtHeader = document.getElementById('jwt-header');
+    const jwtPayload = document.getElementById('jwt-payload');
+    const jwtSignature = document.getElementById('jwt-signature');
+    const jwtExpiry = document.getElementById('jwt-expiry');
+    const jwtTime = document.getElementById('jwt-time');
+    
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      
+      // 恢复上次的输入
+      const savedToken = localStorage.getItem('jwtToken');
+      if (savedToken) {
+        jwtInput.value = savedToken;
+        decodeJwt(savedToken);
+      }
+    });
+    
+    // 解析按钮点击事件
+    decodeBtn.addEventListener('click', () => {
+      const token = jwtInput.value.trim();
+      if (!token) {
+        showAlert('请输入JWT令牌', 'error');
+        return;
+      }
+      
+      // 保存到本地存储
+      localStorage.setItem('jwtToken', token);
+      
+      // 解析JWT
+      decodeJwt(token);
+    });
+    
+    // 清空按钮点击事件
+    clearBtn.addEventListener('click', () => {
+      jwtInput.value = '';
+      jwtResult.classList.add('hidden');
+      jwtEmpty.classList.remove('hidden');
+      localStorage.removeItem('jwtToken');
+      showAlert('已清空输入', 'info');
+    });
+    
+    // 复制头部按钮点击事件
+    copyHeaderBtn.addEventListener('click', () => {
+      const headerText = jwtHeader.textContent;
+      if (headerText) {
+        navigator.clipboard.writeText(headerText).then(() => {
+          showAlert('已复制头部到剪贴板', 'success');
+        }).catch(err => {
+          showAlert('复制失败: ' + err, 'error');
+        });
+      } else {
+        showAlert('没有可复制的头部', 'info');
+      }
+    });
+    
+    // 复制载荷按钮点击事件
+    copyPayloadBtn.addEventListener('click', () => {
+      const payloadText = jwtPayload.textContent;
+      if (payloadText) {
+        navigator.clipboard.writeText(payloadText).then(() => {
+          showAlert('已复制载荷到剪贴板', 'success');
+        }).catch(err => {
+          showAlert('复制失败: ' + err, 'error');
+        });
+      } else {
+        showAlert('没有可复制的载荷', 'info');
+      }
+    });
+    
+    // 示例按钮点击事件
+    exampleBtn.addEventListener('click', () => {
+      // 创建一个示例JWT令牌
+      // 这是一个示例令牌，包含了常见的字段
+      const exampleToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IuW3peWFt-e9keermeiusOaIt-W4iCIsImlhdCI6MTUxNjIzOTAyMiwiZXhwIjoxNjE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+      
+      jwtInput.value = exampleToken;
+      decodeJwt(exampleToken);
+    });
+    
+    // 解析JWT函数
+    function decodeJwt(token) {
+      try {
+        // 分割令牌
+        const parts = token.split('.');
+        if (parts.length !== 3) {
+          throw new Error('JWT令牌格式无效');
+        }
+        
+        // 解码头部
+        const header = JSON.parse(atob(parts[0]));
+        jwtHeader.textContent = JSON.stringify(header, null, 2);
+        
+        // 解码载荷
+        const payload = JSON.parse(atob(parts[1]));
+        jwtPayload.textContent = JSON.stringify(payload, null, 2);
+        
+        // 显示签名（不解码，因为它是二进制数据）
+        jwtSignature.textContent = parts[2];
+        
+        // 检查是否过期
+        checkExpiration(payload);
+        
+        // 显示结果，隐藏空状态
+        jwtResult.classList.remove('hidden');
+        jwtEmpty.classList.add('hidden');
+        
+        showAlert('JWT令牌解析成功', 'success');
+      } catch (error) {
+        showAlert('JWT解析错误: ' + error.message, 'error');
+      }
+    }
+    
+    // 检查令牌是否过期
+    function checkExpiration(payload) {
+      const now = Math.floor(Date.now() / 1000);
+      
+      // 显示时间信息
+      let timeInfo = '';
+      
+      if (payload.iat) {
+        const iatDate = new Date(payload.iat * 1000);
+        timeInfo += `发行时间: ${iatDate.toLocaleString()}<br>`;
+      }
+      
+      if (payload.nbf) {
+        const nbfDate = new Date(payload.nbf * 1000);
+        timeInfo += `生效时间: ${nbfDate.toLocaleString()}<br>`;
+      }
+      
+      if (payload.exp) {
+        const expDate = new Date(payload.exp * 1000);
+        timeInfo += `过期时间: ${expDate.toLocaleString()}`;
+        
+        // 检查是否过期
+        if (payload.exp < now) {
+          jwtExpiry.className = 'jwt-expired';
+          jwtExpiry.innerHTML = '<i class="fas fa-exclamation-circle"></i>令牌已过期';
+        } else {
+          jwtExpiry.className = 'jwt-valid';
+          jwtExpiry.innerHTML = '<i class="fas fa-check-circle"></i>令牌有效';
+        }
+      } else {
+        jwtExpiry.className = 'jwt-valid';
+        jwtExpiry.innerHTML = '<i class="fas fa-info-circle"></i>令牌没有过期时间';
+      }
+      
+      jwtTime.innerHTML = timeInfo;
+    }
+    
+    // Base64 URL解码函数
+    function atob(str) {
+      // 替换URL安全字符
+      let output = str.replace(/-/g, '+').replace(/_/g, '/');
+      
+      // 添加填充
+      switch (output.length % 4) {
+        case 0:
+          break;
+        case 2:
+          output += '==';
+          break;
+        case 3:
+          output += '=';
+          break;
+        default:
+          throw new Error('非法base64url字符串');
+      }
+      
+      try {
+        return window.atob(output);
+      } catch (err) {
+        throw new Error('解码失败');
+      }
+    }
+    
+    // 显示提示
+    function showAlert(message, type = 'info') {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type}`;
+      alertDiv.textContent = message;
+      
+      const alertContainer = document.getElementById('alert-container');
+      alertContainer.appendChild(alertDiv);
+      
+      // 3秒后自动移除
+      setTimeout(() => {
+        alertDiv.remove();
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
