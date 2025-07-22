@@ -9,7 +9,9 @@ import {
   faEdit,
   faCheck,
   faClipboardList,
+  faHome,
 } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 interface TodoItem {
   id: string;
@@ -164,7 +166,23 @@ export default function TodoPage() {
   return (
     <div className="container py-4">
       <div className="mx-auto" style={{ maxWidth: "36rem" }}>
-        <h1 className="text-2xl font-bold mb-4">待办事项</h1>
+        {/* 面包屑导航 */}
+        <nav
+          className="flex items-center text-sm mb-4"
+          style={{ color: "var(--text-light)" }}
+        >
+          <Link href="/" className="hover:text-primary transition-colors">
+            <FontAwesomeIcon icon={faHome} className="mr-1" />
+            主页
+          </Link>
+          <span className="mx-2">/</span>
+          <span>待办事项</span>
+        </nav>
+
+        {/* 页面头部 */}
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold">待办事项</h1>
+        </div>
 
         {/* 添加待办事项表单 */}
         <form onSubmit={addTodo} className="flex gap-2">

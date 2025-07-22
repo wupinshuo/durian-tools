@@ -8,7 +8,9 @@ import {
   faCopy,
   faLightbulb,
   faCode,
+  faHome,
 } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 interface JsonDiff {
   [path: string]: {
@@ -166,7 +168,23 @@ export default function JsonPage() {
   return (
     <div className="container py-4">
       <div className="mx-auto" style={{ maxWidth: "56rem" }}>
-        <h1 className="text-2xl font-bold mb-4">JSON对比工具</h1>
+        {/* 面包屑导航 */}
+        <nav
+          className="flex items-center text-sm mb-4"
+          style={{ color: "var(--text-light)" }}
+        >
+          <Link href="/" className="hover:text-primary transition-colors">
+            <FontAwesomeIcon icon={faHome} className="mr-1" />
+            主页
+          </Link>
+          <span className="mx-2">/</span>
+          <span>JSON对比工具</span>
+        </nav>
+
+        {/* 页面头部 */}
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold">JSON对比工具</h1>
+        </div>
 
         {/* JSON编辑器 */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

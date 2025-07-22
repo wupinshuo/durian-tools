@@ -13,7 +13,9 @@ import {
   faExclamationCircle,
   faCheckCircle,
   faInfoCircle,
+  faHome,
 } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 interface DecodedJwt {
   header: Record<string, unknown>;
@@ -226,6 +228,19 @@ export default function JwtPage() {
   return (
     <div className="container py-4">
       <div className="mx-auto" style={{ maxWidth: "48rem" }}>
+        {/* 面包屑导航 */}
+        <nav
+          className="flex items-center text-sm mb-4"
+          style={{ color: "var(--text-light)" }}
+        >
+          <Link href="/" className="hover:text-primary transition-colors">
+            <FontAwesomeIcon icon={faHome} className="mr-1" />
+            主页
+          </Link>
+          <span className="mx-2">/</span>
+          <span>JWT解析工具</span>
+        </nav>
+
         <h1 className="text-2xl font-bold mb-4">JWT解析工具</h1>
 
         {/* JWT输入 */}
