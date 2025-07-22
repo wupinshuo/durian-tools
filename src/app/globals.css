@@ -49,25 +49,28 @@
     max-width: 80rem; /* 等同于旧版的max-w-7xl (1280px) */
   }
 
+  /* 导航栏样式 - 亮色主题 */
   .durian-navbar {
-    @apply flex items-center justify-between px-6 py-3;
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    @apply flex items-center justify-between px-6 py-3 transition-all duration-300;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 50;
   }
 
   .durian-brand {
-    @apply flex items-center gap-3 no-underline;
-    color: white;
-    transition: opacity 0.2s ease;
+    @apply flex items-center gap-3 no-underline transition-all duration-200;
+    color: var(--text);
   }
 
   .durian-brand:hover {
-    opacity: 0.8;
+    transform: translateY(-1px);
   }
 
   .durian-logo {
-    @apply flex items-center justify-center;
+    @apply flex items-center justify-center transition-all duration-200;
     width: 40px;
     height: 40px;
     background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
@@ -84,14 +87,14 @@
   }
 
   .durian-title {
-    @apply text-lg font-bold;
-    color: white;
+    @apply text-lg font-bold transition-colors duration-200;
+    color: var(--text);
     line-height: 1.2;
   }
 
   .durian-subtitle {
-    @apply text-xs;
-    color: rgba(255, 255, 255, 0.7);
+    @apply text-xs transition-colors duration-200;
+    color: var(--text-light);
     line-height: 1;
   }
 
@@ -101,13 +104,13 @@
 
   .theme-toggle-btn {
     @apply flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--text);
   }
 
   .theme-toggle-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.1);
     transform: translateY(-1px);
   }
 
@@ -115,12 +118,40 @@
     @apply text-sm;
   }
 
+  /* 导航栏样式 - 暗色主题 */
+  .dark .durian-navbar {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .dark .durian-brand {
+    color: #ffffff;
+  }
+
+  .dark .durian-title {
+    color: #ffffff;
+  }
+
+  .dark .durian-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .dark .theme-toggle-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+  }
+
+  .dark .theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
   .durian-hero {
-    @apply text-center mb-12;
+    @apply text-center mb-12 py-8;
   }
 
   .durian-hero-title {
-    @apply text-4xl font-bold mb-4;
+    @apply text-4xl font-bold mb-4 transition-all duration-300;
     background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -128,8 +159,15 @@
   }
 
   .durian-hero-subtitle {
-    @apply text-lg;
+    @apply text-lg transition-colors duration-200;
     color: var(--text-light);
+  }
+
+  .dark .durian-hero-title {
+    background: linear-gradient(135deg, #ffa726 0%, #ff7043 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .nav-link {
@@ -192,12 +230,20 @@
   }
 
   .tool-card {
-    @apply flex flex-col items-center justify-center p-8 border border-border rounded-lg cursor-pointer transition-all duration-200;
+    @apply flex flex-col items-center justify-center p-8 border border-border rounded-lg cursor-pointer transition-all duration-300;
     background-color: var(--background);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     &:hover {
       transform: translateY(-0.25rem);
       background-color: var(--background-alt);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .dark .tool-card {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    &:hover {
+      box-shadow: 0 8px 25px -8px rgba(0, 0, 0, 0.4);
     }
   }
 
@@ -215,52 +261,53 @@
     color: var(--text-light);
   }
 
+  /* 页脚样式 - 亮色主题 */
   .durian-footer {
-    @apply mt-16 py-8;
+    @apply mt-auto transition-all duration-300;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 20px 0;
+  }
+
+  .durian-footer-content {
+    @apply flex justify-center items-center;
+  }
+
+  .durian-footer-text {
+    @apply text-sm text-center transition-colors duration-200;
+    color: var(--text-light);
+    margin: 0;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+
+  /* 页脚样式 - 暗色主题 */
+  .dark .durian-footer {
     background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  .durian-footer-content {
-    @apply flex flex-col md:flex-row justify-between items-center gap-4;
-  }
-
-  .durian-footer-brand {
-    @apply flex flex-col items-center md:items-start;
-  }
-
-  .durian-footer-title {
-    @apply text-lg font-bold;
-    color: white;
-  }
-
-  .durian-footer-subtitle {
-    @apply text-sm;
-    color: rgba(255, 255, 255, 0.7);
-  }
-
-  .durian-footer-copyright {
-    @apply text-sm;
+  .dark .durian-footer-text {
     color: rgba(255, 255, 255, 0.6);
   }
 
   .durian-tool-preview {
-    @apply mt-8 border border-border rounded-lg overflow-hidden;
+    @apply mt-8 border border-border rounded-lg overflow-hidden transition-all duration-300;
     background-color: var(--background);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
 
   .durian-tool-preview-header {
-    @apply p-4 border-b border-border flex justify-between items-center;
+    @apply p-4 border-b border-border flex justify-between items-center transition-all duration-300;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   }
 
   .dark .durian-tool-preview-header {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
   }
 
   .durian-tool-preview-title {
-    @apply font-semibold text-lg;
+    @apply font-semibold text-lg transition-colors duration-200;
     color: var(--text);
   }
 
