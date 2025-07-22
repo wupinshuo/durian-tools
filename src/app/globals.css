@@ -1,0 +1,309 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #3B82F6;
+  --primary-hover: #2563EB;
+  --secondary: #10B981;
+  --secondary-hover: #059669;
+  --danger: #EF4444;
+  --danger-hover: #DC2626;
+  --dark: #1F2937;
+  --light: #F3F4F6;
+  --background: #FFFFFF;
+  --background-alt: #F9FAFB;
+  --border: #E5E7EB;
+  --text: #111827;
+  --text-light: #6B7280;
+}
+
+/* 暗色主题 */
+.dark {
+  --primary: #60A5FA;
+  --primary-hover: #3B82F6;
+  --secondary: #34D399;
+  --secondary-hover: #10B981;
+  --danger: #F87171;
+  --danger-hover: #EF4444;
+  --dark: #F9FAFB;
+  --light: #374151;
+  --background: #111827;
+  --background-alt: #1F2937;
+  --border: #374151;
+  --text: #F9FAFB;
+  --text-light: #D1D5DB;
+}
+
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--text);
+    transition: background-color 0.3s, color 0.3s;
+  }
+}
+
+@layer components {
+  .container {
+    @apply w-full mx-auto px-4;
+    max-width: 80rem; /* 等同于旧版的max-w-7xl (1280px) */
+  }
+
+  .durian-navbar {
+    @apply flex items-center justify-between px-6 py-3;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .durian-brand {
+    @apply flex items-center gap-3 no-underline;
+    color: white;
+    transition: opacity 0.2s ease;
+  }
+
+  .durian-brand:hover {
+    opacity: 0.8;
+  }
+
+  .durian-logo {
+    @apply flex items-center justify-center;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+  }
+
+  .durian-icon {
+    filter: brightness(0) invert(1);
+  }
+
+  .durian-brand-text {
+    @apply flex flex-col;
+  }
+
+  .durian-title {
+    @apply text-lg font-bold;
+    color: white;
+    line-height: 1.2;
+  }
+
+  .durian-subtitle {
+    @apply text-xs;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1;
+  }
+
+  .navbar-nav {
+    @apply flex items-center gap-4;
+  }
+
+  .theme-toggle-btn {
+    @apply flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+
+  .theme-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .theme-icon {
+    @apply text-sm;
+  }
+
+  .durian-hero {
+    @apply text-center mb-12;
+  }
+
+  .durian-hero-title {
+    @apply text-4xl font-bold mb-4;
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .durian-hero-subtitle {
+    @apply text-lg;
+    color: var(--text-light);
+  }
+
+  .nav-link {
+    @apply no-underline transition-colors duration-200;
+    color: var(--text-light);
+    &:hover {
+      color: var(--primary);
+    }
+  }
+
+  .nav-link.active {
+    @apply text-primary font-medium;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md cursor-pointer transition-colors duration-200 border border-transparent;
+  }
+
+  .btn-primary {
+    @apply text-white;
+    background-color: var(--primary);
+    &:hover {
+      background-color: var(--primary-hover);
+    }
+  }
+
+  .btn-secondary {
+    @apply text-white;
+    background-color: var(--secondary);
+    &:hover {
+      background-color: var(--secondary-hover);
+    }
+  }
+
+  .btn-danger {
+    @apply text-white;
+    background-color: var(--danger);
+    &:hover {
+      background-color: var(--danger-hover);
+    }
+  }
+
+  .btn-outline {
+    @apply border-border;
+    color: var(--text);
+    background-color: transparent;
+    &:hover {
+      background-color: var(--light);
+    }
+  }
+
+  .card {
+    @apply border border-border rounded-lg p-6 transition-transform duration-200;
+    background-color: var(--background);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    &:hover {
+      transform: translateY(-0.25rem);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+  }
+
+  .tool-card {
+    @apply flex flex-col items-center justify-center p-8 border border-border rounded-lg cursor-pointer transition-all duration-200;
+    background-color: var(--background);
+    &:hover {
+      transform: translateY(-0.25rem);
+      background-color: var(--background-alt);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+  }
+
+  .tool-icon {
+    @apply text-4xl mb-4 text-primary;
+  }
+
+  .tool-title {
+    @apply text-lg font-semibold mb-2;
+    color: var(--text);
+  }
+
+  .tool-description {
+    @apply text-sm text-center;
+    color: var(--text-light);
+  }
+
+  .durian-footer {
+    @apply mt-16 py-8;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .durian-footer-content {
+    @apply flex flex-col md:flex-row justify-between items-center gap-4;
+  }
+
+  .durian-footer-brand {
+    @apply flex flex-col items-center md:items-start;
+  }
+
+  .durian-footer-title {
+    @apply text-lg font-bold;
+    color: white;
+  }
+
+  .durian-footer-subtitle {
+    @apply text-sm;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .durian-footer-copyright {
+    @apply text-sm;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .durian-tool-preview {
+    @apply mt-8 border border-border rounded-lg overflow-hidden;
+    background-color: var(--background);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .durian-tool-preview-header {
+    @apply p-4 border-b border-border flex justify-between items-center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  }
+
+  .dark .durian-tool-preview-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  }
+
+  .durian-tool-preview-title {
+    @apply font-semibold text-lg;
+    color: var(--text);
+  }
+
+  .durian-tool-preview-content {
+    height: 600px;
+  }
+
+  .input {
+    @apply w-full px-3 py-2 text-sm border border-border rounded-md transition-colors duration-200 outline-none;
+    background-color: var(--background);
+    color: var(--text);
+    &:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+  }
+
+  .textarea {
+    @apply w-full px-3 py-2 text-sm border border-border rounded-md transition-colors duration-200 outline-none min-h-[100px] resize-y;
+    background-color: var(--background);
+    color: var(--text);
+    &:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+  }
+
+  .alert {
+    @apply p-3 rounded-md mb-4;
+  }
+
+  .alert-success {
+    @apply border border-secondary text-secondary;
+    background-color: rgba(16, 185, 129, 0.1);
+  }
+
+  .alert-error {
+    @apply border border-danger text-danger;
+    background-color: rgba(239, 68, 68, 0.1);
+  }
+
+  .alert-info {
+    @apply border border-primary text-primary;
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+}

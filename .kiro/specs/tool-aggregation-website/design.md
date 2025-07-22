@@ -11,6 +11,8 @@
 ### 技术栈
 
 - **前端框架**：Next.js
+- **包管理**: pnpm
+- **Nodejs版本**: 20.16.0
 - **样式解决方案**：Tailwind CSS
 - **UI组件库**：shadcn/ui
 - **图标库**：FontAwesome
