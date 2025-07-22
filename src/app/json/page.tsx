@@ -11,6 +11,8 @@ import {
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 interface JsonDiff {
   [path: string]: {
@@ -166,89 +168,93 @@ export default function JsonPage() {
   }, []);
 
   return (
-    <div className="container py-4">
-      <div className="mx-auto" style={{ maxWidth: "56rem" }}>
-        {/* 面包屑导航 */}
-        <nav
-          className="flex items-center text-sm mb-4"
-          style={{ color: "var(--text-light)" }}
-        >
-          <Link href="/" className="hover:text-primary transition-colors">
-            <FontAwesomeIcon icon={faHome} className="mr-1" />
-            主页
-          </Link>
-          <span className="mx-2">/</span>
-          <span>JSON对比工具</span>
-        </nav>
-
-        {/* 页面头部 */}
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">JSON对比工具</h1>
-        </div>
-
-        {/* JSON编辑器 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <h3 className="font-semibold mb-2">左侧JSON</h3>
-            <textarea
-              className="w-full h-[300px] font-mono p-3 border border-border rounded-md resize-y"
-              style={{
-                backgroundColor: "var(--background)",
-                color: "var(--text)",
-              }}
-              placeholder="在此输入JSON数据..."
-              value={leftJson}
-              onChange={(e) => setLeftJson(e.target.value)}
-            />
-          </div>
-          <div>
-            <h3 className="font-semibold mb-2">右侧JSON</h3>
-            <textarea
-              className="w-full h-[300px] font-mono p-3 border border-border rounded-md resize-y"
-              style={{
-                backgroundColor: "var(--background)",
-                color: "var(--text)",
-              }}
-              placeholder="在此输入JSON数据..."
-              value={rightJson}
-              onChange={(e) => setRightJson(e.target.value)}
-            />
-          </div>
-        </div>
-
-        {/* 控制按钮 */}
-        <div className="flex flex-wrap gap-2 mt-4">
-          <button onClick={compareJson} className="btn btn-primary">
-            <FontAwesomeIcon icon={faCodeCompare} className="mr-2" />
-            对比
-          </button>
-          <button onClick={clearInputs} className="btn btn-outline">
-            <FontAwesomeIcon icon={faEraser} className="mr-2" />
-            清空
-          </button>
-          <button onClick={copyResult} className="btn btn-secondary">
-            <FontAwesomeIcon icon={faCopy} className="mr-2" />
-            复制结果
-          </button>
-          <button onClick={loadExample} className="btn btn-outline">
-            <FontAwesomeIcon icon={faLightbulb} className="mr-2" />
-            加载示例
-          </button>
-        </div>
-
-        {/* 结果显示 */}
-        <div>
-          <h3 className="font-semibold my-2 mt-4">对比结果</h3>
-          <div
-            id="json-result"
-            className="p-4 border border-border rounded-md font-mono whitespace-pre-wrap overflow-x-auto min-h-[100px] max-h-[400px] overflow-y-auto"
-            style={{ backgroundColor: "var(--background-alt)" }}
+    <>
+      <Navbar />
+      <div className="container py-4 flex-1">
+        <div className="mx-auto" style={{ maxWidth: "56rem" }}>
+          {/* 面包屑导航 */}
+          <nav
+            className="flex items-center text-sm mb-4"
+            style={{ color: "var(--text-light)" }}
           >
-            {diffResult}
+            <Link href="/" className="hover:text-primary transition-colors">
+              <FontAwesomeIcon icon={faHome} className="mr-1" />
+              主页
+            </Link>
+            <span className="mx-2">/</span>
+            <span>JSON对比工具</span>
+          </nav>
+
+          {/* 页面头部 */}
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-2xl font-bold">JSON对比工具</h1>
+          </div>
+
+          {/* JSON编辑器 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h3 className="font-semibold mb-2">左侧JSON</h3>
+              <textarea
+                className="w-full h-[300px] font-mono p-3 border border-border rounded-md resize-y"
+                style={{
+                  backgroundColor: "var(--background)",
+                  color: "var(--text)",
+                }}
+                placeholder="在此输入JSON数据..."
+                value={leftJson}
+                onChange={(e) => setLeftJson(e.target.value)}
+              />
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">右侧JSON</h3>
+              <textarea
+                className="w-full h-[300px] font-mono p-3 border border-border rounded-md resize-y"
+                style={{
+                  backgroundColor: "var(--background)",
+                  color: "var(--text)",
+                }}
+                placeholder="在此输入JSON数据..."
+                value={rightJson}
+                onChange={(e) => setRightJson(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* 控制按钮 */}
+          <div className="flex flex-wrap gap-2 mt-4">
+            <button onClick={compareJson} className="btn btn-primary">
+              <FontAwesomeIcon icon={faCodeCompare} className="mr-2" />
+              对比
+            </button>
+            <button onClick={clearInputs} className="btn btn-outline">
+              <FontAwesomeIcon icon={faEraser} className="mr-2" />
+              清空
+            </button>
+            <button onClick={copyResult} className="btn btn-secondary">
+              <FontAwesomeIcon icon={faCopy} className="mr-2" />
+              复制结果
+            </button>
+            <button onClick={loadExample} className="btn btn-outline">
+              <FontAwesomeIcon icon={faLightbulb} className="mr-2" />
+              加载示例
+            </button>
+          </div>
+
+          {/* 结果显示 */}
+          <div>
+            <h3 className="font-semibold my-2 mt-4">对比结果</h3>
+            <div
+              id="json-result"
+              className="p-4 border border-border rounded-md font-mono whitespace-pre-wrap overflow-x-auto min-h-[100px] max-h-[400px] overflow-y-auto"
+              style={{ backgroundColor: "var(--background-alt)" }}
+            >
+              {diffResult}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }
 

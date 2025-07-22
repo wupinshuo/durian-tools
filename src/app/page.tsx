@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ToolCard from "@/components/ui/ToolCard";
@@ -14,57 +11,40 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
-  const [currentTool, setCurrentTool] = useState<string>("todo");
-
-  // 在组件挂载时恢复上次使用的工具
-  useState(() => {
-    if (typeof window !== "undefined") {
-      const savedTool = localStorage.getItem("currentTool");
-      if (savedTool) {
-        setCurrentTool(savedTool);
-      }
-    }
-  });
-
-  // 切换工具
-  const switchTool = (tool: string) => {
-    setCurrentTool(tool);
-    localStorage.setItem("currentTool", tool);
-  };
-
   return (
     <>
       <Navbar />
 
-      <main className="container py-8">
+      <main className="container py-8 flex-1">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold mb-4">榴莲工具</h1>
+          <p className="text-lg text-gray-600 dark:text-gray-400">
+            实用工具聚合平台，提供多种开发和日常工具
+          </p>
+        </div>
+
         {/* 工具卡片网格 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          <div onClick={() => switchTool("todo")}>
-            <ToolCard
-              title="待办事项"
-              description="创建和管理您的待办事项清单"
-              icon={faCheckCircle}
-              href="/todo"
-            />
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <ToolCard
+            title="待办事项"
+            description="创建和管理您的待办事项清单"
+            icon={faCheckCircle}
+            href="/todo"
+          />
 
-          <div onClick={() => switchTool("json")}>
-            <ToolCard
-              title="JSON对比"
-              description="比较两个JSON数据的差异"
-              icon={faCode}
-              href="/json"
-            />
-          </div>
+          <ToolCard
+            title="JSON对比"
+            description="比较两个JSON数据的差异"
+            icon={faCode}
+            href="/json"
+          />
 
-          <div onClick={() => switchTool("jwt")}>
-            <ToolCard
-              title="JWT解析"
-              description="解析JWT令牌的内容"
-              icon={faKey}
-              href="/jwt"
-            />
-          </div>
+          <ToolCard
+            title="JWT解析"
+            description="解析JWT令牌的内容"
+            icon={faKey}
+            href="/jwt"
+          />
 
           <ToolCard
             title="更多工具"
@@ -73,20 +53,6 @@ export default function Home() {
             href="#"
             disabled
           />
-        </div>
-
-        {/* 工具预览 */}
-        <div className="durian-tool-preview">
-          <div className="durian-tool-preview-header">
-            <h2 className="durian-tool-preview-title">工具预览</h2>
-          </div>
-          <div className="durian-tool-preview-content">
-            <iframe
-              className="w-full h-full border-0"
-              src={`/${currentTool}`}
-              title={`${currentTool} 工具预览`}
-            />
-          </div>
         </div>
       </main>
 

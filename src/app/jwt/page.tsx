@@ -16,6 +16,8 @@ import {
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 interface DecodedJwt {
   header: Record<string, unknown>;
@@ -226,139 +228,145 @@ export default function JwtPage() {
   };
 
   return (
-    <div className="container py-4">
-      <div className="mx-auto" style={{ maxWidth: "48rem" }}>
-        {/* 面包屑导航 */}
-        <nav
-          className="flex items-center text-sm mb-4"
-          style={{ color: "var(--text-light)" }}
-        >
-          <Link href="/" className="hover:text-primary transition-colors">
-            <FontAwesomeIcon icon={faHome} className="mr-1" />
-            主页
-          </Link>
-          <span className="mx-2">/</span>
-          <span>JWT解析工具</span>
-        </nav>
-
-        <h1 className="text-2xl font-bold mb-4">JWT解析工具</h1>
-
-        {/* JWT输入 */}
-        <div className="mb-4">
-          <h3 className="font-semibold mb-2">JWT令牌</h3>
-          <textarea
-            className="w-full font-mono p-3 border border-border rounded-md resize-y min-h-[100px]"
-            style={{
-              backgroundColor: "var(--background)",
-              color: "var(--text)",
-            }}
-            placeholder="在此输入JWT令牌..."
-            value={jwtToken}
-            onChange={(e) => setJwtToken(e.target.value)}
-          />
-        </div>
-
-        {/* 控制按钮 */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          <button
-            onClick={() => decodeJwt(jwtToken)}
-            className="btn btn-primary"
-          >
-            <FontAwesomeIcon icon={faKey} className="mr-2" />
-            解析
-          </button>
-          <button onClick={clearInput} className="btn btn-outline">
-            <FontAwesomeIcon icon={faEraser} className="mr-2" />
-            清空
-          </button>
-          <button onClick={copyHeader} className="btn btn-secondary">
-            <FontAwesomeIcon icon={faCopy} className="mr-2" />
-            复制头部
-          </button>
-          <button onClick={copyPayload} className="btn btn-secondary">
-            <FontAwesomeIcon icon={faCopy} className="mr-2" />
-            复制载荷
-          </button>
-          <button onClick={loadExample} className="btn btn-outline">
-            <FontAwesomeIcon icon={faLightbulb} className="mr-2" />
-            加载示例
-          </button>
-        </div>
-
-        {/* 解析结果 */}
-        {showResult && decoded ? (
-          <div>
-            <h3 className="font-semibold my-2">解析结果</h3>
-
-            {/* 头部 */}
-            <div className="mb-4">
-              <div className="border border-border rounded-lg overflow-hidden">
-                <div
-                  className="p-3 border-b border-border font-semibold"
-                  style={{ backgroundColor: "var(--background-alt)" }}
-                >
-                  <FontAwesomeIcon icon={faFileCode} className="mr-2" />
-                  头部 (Header)
-                </div>
-                <div className="p-4">
-                  <pre className="font-mono whitespace-pre-wrap overflow-x-auto">
-                    {JSON.stringify(decoded.header, null, 2)}
-                  </pre>
-                </div>
-              </div>
-            </div>
-
-            {/* 载荷 */}
-            <div className="mb-4">
-              <div className="border border-border rounded-lg overflow-hidden">
-                <div
-                  className="p-3 border-b border-border font-semibold"
-                  style={{ backgroundColor: "var(--background-alt)" }}
-                >
-                  <FontAwesomeIcon icon={faDatabase} className="mr-2" />
-                  载荷 (Payload)
-                </div>
-                <div className="p-4">
-                  <pre className="font-mono whitespace-pre-wrap overflow-x-auto">
-                    {JSON.stringify(decoded.payload, null, 2)}
-                  </pre>
-                  {renderExpiryStatus()}
-                  {formatTimeInfo()}
-                </div>
-              </div>
-            </div>
-
-            {/* 签名 */}
-            <div className="mb-4">
-              <div className="border border-border rounded-lg overflow-hidden">
-                <div
-                  className="p-3 border-b border-border font-semibold"
-                  style={{ backgroundColor: "var(--background-alt)" }}
-                >
-                  <FontAwesomeIcon icon={faSignature} className="mr-2" />
-                  签名 (Signature)
-                </div>
-                <div className="p-4">
-                  <div className="font-mono break-all">{decoded.signature}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div
-            className="text-center p-8"
+    <>
+      <Navbar />
+      <div className="container py-4 flex-1">
+        <div className="mx-auto" style={{ maxWidth: "48rem" }}>
+          {/* 面包屑导航 */}
+          <nav
+            className="flex items-center text-sm mb-4"
             style={{ color: "var(--text-light)" }}
           >
-            <FontAwesomeIcon
-              icon={faKey}
-              className="text-4xl mb-4"
-              style={{ opacity: 0.5 }}
+            <Link href="/" className="hover:text-primary transition-colors">
+              <FontAwesomeIcon icon={faHome} className="mr-1" />
+              主页
+            </Link>
+            <span className="mx-2">/</span>
+            <span>JWT解析工具</span>
+          </nav>
+
+          <h1 className="text-2xl font-bold mb-4">JWT解析工具</h1>
+
+          {/* JWT输入 */}
+          <div className="mb-4">
+            <h3 className="font-semibold mb-2">JWT令牌</h3>
+            <textarea
+              className="w-full font-mono p-3 border border-border rounded-md resize-y min-h-[100px]"
+              style={{
+                backgroundColor: "var(--background)",
+                color: "var(--text)",
+              }}
+              placeholder="在此输入JWT令牌..."
+              value={jwtToken}
+              onChange={(e) => setJwtToken(e.target.value)}
             />
-            <p>请输入JWT令牌并点击解析按钮</p>
           </div>
-        )}
+
+          {/* 控制按钮 */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            <button
+              onClick={() => decodeJwt(jwtToken)}
+              className="btn btn-primary"
+            >
+              <FontAwesomeIcon icon={faKey} className="mr-2" />
+              解析
+            </button>
+            <button onClick={clearInput} className="btn btn-outline">
+              <FontAwesomeIcon icon={faEraser} className="mr-2" />
+              清空
+            </button>
+            <button onClick={copyHeader} className="btn btn-secondary">
+              <FontAwesomeIcon icon={faCopy} className="mr-2" />
+              复制头部
+            </button>
+            <button onClick={copyPayload} className="btn btn-secondary">
+              <FontAwesomeIcon icon={faCopy} className="mr-2" />
+              复制载荷
+            </button>
+            <button onClick={loadExample} className="btn btn-outline">
+              <FontAwesomeIcon icon={faLightbulb} className="mr-2" />
+              加载示例
+            </button>
+          </div>
+
+          {/* 解析结果 */}
+          {showResult && decoded ? (
+            <div>
+              <h3 className="font-semibold my-2">解析结果</h3>
+
+              {/* 头部 */}
+              <div className="mb-4">
+                <div className="border border-border rounded-lg overflow-hidden">
+                  <div
+                    className="p-3 border-b border-border font-semibold"
+                    style={{ backgroundColor: "var(--background-alt)" }}
+                  >
+                    <FontAwesomeIcon icon={faFileCode} className="mr-2" />
+                    头部 (Header)
+                  </div>
+                  <div className="p-4">
+                    <pre className="font-mono whitespace-pre-wrap overflow-x-auto">
+                      {JSON.stringify(decoded.header, null, 2)}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+
+              {/* 载荷 */}
+              <div className="mb-4">
+                <div className="border border-border rounded-lg overflow-hidden">
+                  <div
+                    className="p-3 border-b border-border font-semibold"
+                    style={{ backgroundColor: "var(--background-alt)" }}
+                  >
+                    <FontAwesomeIcon icon={faDatabase} className="mr-2" />
+                    载荷 (Payload)
+                  </div>
+                  <div className="p-4">
+                    <pre className="font-mono whitespace-pre-wrap overflow-x-auto">
+                      {JSON.stringify(decoded.payload, null, 2)}
+                    </pre>
+                    {renderExpiryStatus()}
+                    {formatTimeInfo()}
+                  </div>
+                </div>
+              </div>
+
+              {/* 签名 */}
+              <div className="mb-4">
+                <div className="border border-border rounded-lg overflow-hidden">
+                  <div
+                    className="p-3 border-b border-border font-semibold"
+                    style={{ backgroundColor: "var(--background-alt)" }}
+                  >
+                    <FontAwesomeIcon icon={faSignature} className="mr-2" />
+                    签名 (Signature)
+                  </div>
+                  <div className="p-4">
+                    <div className="font-mono break-all">
+                      {decoded.signature}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div
+              className="text-center p-8"
+              style={{ color: "var(--text-light)" }}
+            >
+              <FontAwesomeIcon
+                icon={faKey}
+                className="text-4xl mb-4"
+                style={{ opacity: 0.5 }}
+              />
+              <p>请输入JWT令牌并点击解析按钮</p>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }
 

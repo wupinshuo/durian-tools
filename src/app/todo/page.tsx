@@ -12,6 +12,8 @@ import {
   faHome,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 interface TodoItem {
   id: string;
@@ -164,126 +166,132 @@ export default function TodoPage() {
   const pendingCount = todos.length - completedCount;
 
   return (
-    <div className="container py-4">
-      <div className="mx-auto" style={{ maxWidth: "36rem" }}>
-        {/* 面包屑导航 */}
-        <nav
-          className="flex items-center text-sm mb-4"
-          style={{ color: "var(--text-light)" }}
-        >
-          <Link href="/" className="hover:text-primary transition-colors">
-            <FontAwesomeIcon icon={faHome} className="mr-1" />
-            主页
-          </Link>
-          <span className="mx-2">/</span>
-          <span>待办事项</span>
-        </nav>
+    <>
+      <Navbar />
+      <div className="container py-4 flex-1">
+        <div className="mx-auto" style={{ maxWidth: "36rem" }}>
+          {/* 面包屑导航 */}
+          <nav
+            className="flex items-center text-sm mb-4"
+            style={{ color: "var(--text-light)" }}
+          >
+            <Link href="/" className="hover:text-primary transition-colors">
+              <FontAwesomeIcon icon={faHome} className="mr-1" />
+              主页
+            </Link>
+            <span className="mx-2">/</span>
+            <span>待办事项</span>
+          </nav>
 
-        {/* 页面头部 */}
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">待办事项</h1>
-        </div>
+          {/* 页面头部 */}
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-2xl font-bold">待办事项</h1>
+          </div>
 
-        {/* 添加待办事项表单 */}
-        <form onSubmit={addTodo} className="flex gap-2">
-          <input
-            type="text"
-            className="input flex-1"
-            placeholder="添加新的待办事项..."
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            required
-          />
-          <button type="submit" className="btn btn-primary">
-            <FontAwesomeIcon icon={faPlus} className="mr-2" />
-            添加
-          </button>
-        </form>
+          {/* 添加待办事项表单 */}
+          <form onSubmit={addTodo} className="flex gap-2">
+            <input
+              type="text"
+              className="input flex-1"
+              placeholder="添加新的待办事项..."
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              required
+            />
+            <button type="submit" className="btn btn-primary">
+              <FontAwesomeIcon icon={faPlus} className="mr-2" />
+              添加
+            </button>
+          </form>
 
-        {/* 待办事项列表 */}
-        <div className="mt-6 border border-border rounded-lg overflow-hidden">
-          {todos.length === 0 ? (
-            <div
-              className="p-8 text-center"
-              style={{ color: "var(--text-light)" }}
-            >
-              <FontAwesomeIcon
-                icon={faClipboardList}
-                className="text-4xl mb-4"
-                style={{ opacity: 0.5 }}
-              />
-              <p>暂无待办事项</p>
-              <p className="text-sm mt-2">添加一些待办事项开始使用吧</p>
-            </div>
-          ) : (
-            todos.map((todo) => (
+          {/* 待办事项列表 */}
+          <div className="mt-6 border border-border rounded-lg overflow-hidden">
+            {todos.length === 0 ? (
               <div
-                key={todo.id}
-                className="p-4 border-b border-border last:border-b-0 flex items-center"
+                className="p-8 text-center"
+                style={{ color: "var(--text-light)" }}
               >
-                <div
-                  className={`w-5 h-5 border-2 rounded flex items-center justify-center cursor-pointer mr-4 ${
-                    todo.completed
-                      ? "border-primary text-white"
-                      : "border-border"
-                  }`}
-                  style={
-                    todo.completed ? { backgroundColor: "var(--primary)" } : {}
-                  }
-                  onClick={() => toggleTodoCompleted(todo.id)}
-                >
-                  {todo.completed && (
-                    <FontAwesomeIcon icon={faCheck} className="text-xs" />
-                  )}
-                </div>
-                <div
-                  className={`flex-1 ${todo.completed ? "line-through" : ""}`}
-                  style={{ opacity: todo.completed ? 0.6 : 1 }}
-                >
-                  {todo.text}
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    className="btn btn-outline p-2"
-                    onClick={() => editTodo(todo.id)}
-                    aria-label="编辑"
-                  >
-                    <FontAwesomeIcon icon={faEdit} />
-                  </button>
-                  <button
-                    className="btn btn-danger p-2"
-                    onClick={() => deleteTodo(todo.id)}
-                    aria-label="删除"
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                </div>
+                <FontAwesomeIcon
+                  icon={faClipboardList}
+                  className="text-4xl mb-4"
+                  style={{ opacity: 0.5 }}
+                />
+                <p>暂无待办事项</p>
+                <p className="text-sm mt-2">添加一些待办事项开始使用吧</p>
               </div>
-            ))
-          )}
-        </div>
+            ) : (
+              todos.map((todo) => (
+                <div
+                  key={todo.id}
+                  className="p-4 border-b border-border last:border-b-0 flex items-center"
+                >
+                  <div
+                    className={`w-5 h-5 border-2 rounded flex items-center justify-center cursor-pointer mr-4 ${
+                      todo.completed
+                        ? "border-primary text-white"
+                        : "border-border"
+                    }`}
+                    style={
+                      todo.completed
+                        ? { backgroundColor: "var(--primary)" }
+                        : {}
+                    }
+                    onClick={() => toggleTodoCompleted(todo.id)}
+                  >
+                    {todo.completed && (
+                      <FontAwesomeIcon icon={faCheck} className="text-xs" />
+                    )}
+                  </div>
+                  <div
+                    className={`flex-1 ${todo.completed ? "line-through" : ""}`}
+                    style={{ opacity: todo.completed ? 0.6 : 1 }}
+                  >
+                    {todo.text}
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      className="btn btn-outline p-2"
+                      onClick={() => editTodo(todo.id)}
+                      aria-label="编辑"
+                    >
+                      <FontAwesomeIcon icon={faEdit} />
+                    </button>
+                    <button
+                      className="btn btn-danger p-2"
+                      onClick={() => deleteTodo(todo.id)}
+                      aria-label="删除"
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
 
-        {/* 待办事项统计 */}
-        <div
-          className="flex justify-between mt-4 text-sm"
-          style={{ color: "var(--text-light)" }}
-        >
-          <div>已完成: {completedCount}</div>
-          <div>待完成: {pendingCount}</div>
-        </div>
+          {/* 待办事项统计 */}
+          <div
+            className="flex justify-between mt-4 text-sm"
+            style={{ color: "var(--text-light)" }}
+          >
+            <div>已完成: {completedCount}</div>
+            <div>待完成: {pendingCount}</div>
+          </div>
 
-        {/* 操作按钮 */}
-        <div className="flex justify-between mt-4">
-          <button onClick={clearCompleted} className="btn btn-outline">
-            <FontAwesomeIcon icon={faTrashAlt} className="mr-2" />
-            清除已完成
-          </button>
-          <button onClick={clearAll} className="btn btn-danger">
-            <FontAwesomeIcon icon={faTrash} className="mr-2" />
-            清除全部
-          </button>
+          {/* 操作按钮 */}
+          <div className="flex justify-between mt-4">
+            <button onClick={clearCompleted} className="btn btn-outline">
+              <FontAwesomeIcon icon={faTrashAlt} className="mr-2" />
+              清除已完成
+            </button>
+            <button onClick={clearAll} className="btn btn-danger">
+              <FontAwesomeIcon icon={faTrash} className="mr-2" />
+              清除全部
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 }

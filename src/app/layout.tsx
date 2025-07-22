@@ -26,7 +26,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/durian_logo.svg" type="image/svg+xml" />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} min-h-screen flex flex-col`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
