@@ -42,15 +42,13 @@ export default function Navbar() {
         <div className="navbar-left flex items-center gap-8">
           {showLogo && (
             <Link href="/" className="durian-brand">
-              <div className="durian-logo">
-                <Image
-                  src="/durian_logo.svg"
-                  alt="榴莲工具"
-                  width={28}
-                  height={28}
-                  className="durian-icon"
-                />
-              </div>
+              <Image
+                src="/durian_logo.svg"
+                alt="榴莲工具"
+                width={48}
+                height={48}
+                className="durian-icon"
+              />
               <div className="durian-brand-text">
                 <span className="durian-title">榴莲工具</span>
                 <span className="durian-subtitle">实用工具聚合平台</span>

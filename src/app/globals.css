@@ -52,9 +52,10 @@
   /* 导航栏样式 - 亮色主题 */
   .durian-navbar {
     @apply flex items-center justify-between px-6 py-3 transition-all duration-300;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     position: sticky;
     top: 0;
     z-index: 50;
@@ -69,45 +70,20 @@
     transform: translateY(-2px);
   }
 
-  .durian-brand:hover .durian-logo {
-    transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(255, 149, 0, 0.5),
-      0 4px 12px rgba(255, 149, 0, 0.3);
+  .durian-brand:hover .durian-icon {
+    transform: scale(1.1);
   }
 
   .durian-logo {
     @apply flex items-center justify-center transition-all duration-200;
     width: 48px;
     height: 48px;
-    background: linear-gradient(135deg, #ff9500 0%, #ff7b00 50%, #ff6600 100%);
-    border-radius: 16px;
-    box-shadow: 0 6px 20px rgba(255, 149, 0, 0.4),
-      0 2px 8px rgba(255, 149, 0, 0.2);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .durian-logo::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.3) 0%,
-      rgba(255, 255, 255, 0.1) 50%,
-      transparent 100%
-    );
-    border-radius: 16px;
-    pointer-events: none;
   }
 
   .durian-icon {
-    width: 28px !important;
-    height: 28px !important;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+    width: 48px !important;
+    height: 48px !important;
+    transition: transform 0.2s ease;
   }
 
   .durian-brand-text {
@@ -213,8 +189,8 @@
 
   /* 导航栏样式 - 暗色主题 */
   .dark .durian-navbar {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
   }
 
   .dark .durian-brand {
@@ -269,16 +245,7 @@
     background: rgba(96, 165, 250, 0.1);
   }
 
-  .dark .durian-logo {
-    background: linear-gradient(135deg, #ff9500 0%, #ff7b00 50%, #ff6600 100%);
-    box-shadow: 0 6px 20px rgba(255, 149, 0, 0.3),
-      0 2px 8px rgba(255, 149, 0, 0.15);
-  }
 
-  .dark .durian-brand:hover .durian-logo {
-    box-shadow: 0 8px 25px rgba(255, 149, 0, 0.4),
-      0 4px 12px rgba(255, 149, 0, 0.25);
-  }
 
   /* 移除了 durian-hero 相关样式，因为不再需要 */
 
@@ -396,8 +363,8 @@
 
   /* 页脚样式 - 暗色主题 */
   .dark .durian-footer {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--background);
+    border-top: 1px solid var(--border);
   }
 
   .dark .durian-footer-text {
