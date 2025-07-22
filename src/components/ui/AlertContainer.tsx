@@ -40,10 +40,3 @@ export default function AlertContainer() {
     </div>
   );
 }
-
-// 为window对象添加类型定义
-declare global {
-  interface Window {
-    showAlert: (message: string, type?: "success" | "error" | "info") => string;
-  }
-}

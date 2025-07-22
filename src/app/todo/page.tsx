@@ -29,10 +29,12 @@ export default function TodoPage() {
       try {
         const parsedTodos = JSON.parse(savedTodos);
         // 确保日期正确解析
-        const todosWithDates = parsedTodos.map((todo: any) => ({
-          ...todo,
-          createdAt: new Date(todo.createdAt),
-        }));
+        const todosWithDates = parsedTodos.map(
+          (todo: TodoItem & { createdAt: string }) => ({
+            ...todo,
+            createdAt: new Date(todo.createdAt),
+          })
+        );
         setTodos(todosWithDates);
       } catch (error) {
         console.error("Failed to parse todos:", error);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCodeCompare,
@@ -13,16 +13,16 @@ import {
 interface JsonDiff {
   [path: string]: {
     type: "added" | "removed" | "modified";
-    value?: any;
-    oldValue?: any;
-    newValue?: any;
+    value?: unknown;
+    oldValue?: unknown;
+    newValue?: unknown;
   };
 }
 
 export default function JsonPage() {
   const [leftJson, setLeftJson] = useState("");
   const [rightJson, setRightJson] = useState("");
-  const [diffResult, setDiffResult] = useState<JSX.Element | null>(null);
+  const [diffResult, setDiffResult] = useState<React.ReactElement | null>(null);
 
   // 初始化
   useEffect(() => {
@@ -357,7 +357,7 @@ function compareObjects(left: any, right: any, path = ""): JsonDiff {
 }
 
 // 格式化差异结果
-function formatDiff(diff: JsonDiff): JSX.Element {
+function formatDiff(diff: JsonDiff): React.ReactElement {
   const items = Object.entries(diff).map(([path, item]) => {
     switch (item.type) {
       case "added":
@@ -408,7 +408,7 @@ function formatDiff(diff: JsonDiff): JSX.Element {
 }
 
 // 格式化值
-function formatValue(value: any): string {
+function formatValue(value: unknown): string {
   if (value === null) return "null";
   if (value === undefined) return "undefined";
   if (typeof value === "object") return JSON.stringify(value);

@@ -16,8 +16,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 interface DecodedJwt {
-  header: any;
-  payload: any;
+  header: Record<string, unknown>;
+  payload: {
+    iat: number;
+    nbf?: number;
+    exp?: number;
+  };
   signature: string;
   isExpired?: boolean;
 }

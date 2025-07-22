@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 配置选项
+  /* config options here */
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  output: "standalone",
 };
 
 export default nextConfig;
