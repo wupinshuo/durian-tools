@@ -28,8 +28,8 @@ export default function Navbar() {
             <Image
               src="/durian_logo.svg"
               alt="榴莲工具"
-              width={32}
-              height={32}
+              width={28}
+              height={28}
               className="durian-icon"
             />
           </div>

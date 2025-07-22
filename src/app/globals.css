@@ -3,36 +3,36 @@
 @tailwind utilities;
 
 :root {
-  --primary: #3B82F6;
-  --primary-hover: #2563EB;
-  --secondary: #10B981;
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --secondary: #10b981;
   --secondary-hover: #059669;
-  --danger: #EF4444;
-  --danger-hover: #DC2626;
-  --dark: #1F2937;
-  --light: #F3F4F6;
-  --background: #FFFFFF;
-  --background-alt: #F9FAFB;
-  --border: #E5E7EB;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --dark: #1f2937;
+  --light: #f3f4f6;
+  --background: #ffffff;
+  --background-alt: #f9fafb;
+  --border: #e5e7eb;
   --text: #111827;
-  --text-light: #6B7280;
+  --text-light: #6b7280;
 }
 
 /* 暗色主题 */
 .dark {
-  --primary: #60A5FA;
-  --primary-hover: #3B82F6;
-  --secondary: #34D399;
-  --secondary-hover: #10B981;
-  --danger: #F87171;
-  --danger-hover: #EF4444;
-  --dark: #F9FAFB;
+  --primary: #60a5fa;
+  --primary-hover: #3b82f6;
+  --secondary: #34d399;
+  --secondary-hover: #10b981;
+  --danger: #f87171;
+  --danger-hover: #ef4444;
+  --dark: #f9fafb;
   --light: #374151;
   --background: #111827;
-  --background-alt: #1F2937;
+  --background-alt: #1f2937;
   --border: #374151;
-  --text: #F9FAFB;
-  --text-light: #D1D5DB;
+  --text: #f9fafb;
+  --text-light: #d1d5db;
 }
 
 @layer base {
@@ -66,20 +66,48 @@
   }
 
   .durian-brand:hover {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+  }
+
+  .durian-brand:hover .durian-logo {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(255, 149, 0, 0.5),
+      0 4px 12px rgba(255, 149, 0, 0.3);
   }
 
   .durian-logo {
     @apply flex items-center justify-center transition-all duration-200;
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #ff9500 0%, #ff7b00 50%, #ff6600 100%);
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(255, 149, 0, 0.4),
+      0 2px 8px rgba(255, 149, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .durian-logo::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 100%
+    );
+    border-radius: 16px;
+    pointer-events: none;
   }
 
   .durian-icon {
-    filter: brightness(0) invert(1);
+    width: 28px !important;
+    height: 28px !important;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
   }
 
   .durian-brand-text {
@@ -146,29 +174,18 @@
     background: rgba(255, 255, 255, 0.2);
   }
 
-  .durian-hero {
-    @apply text-center mb-12 py-8;
+  .dark .durian-logo {
+    background: linear-gradient(135deg, #ff9500 0%, #ff7b00 50%, #ff6600 100%);
+    box-shadow: 0 6px 20px rgba(255, 149, 0, 0.3),
+      0 2px 8px rgba(255, 149, 0, 0.15);
   }
 
-  .durian-hero-title {
-    @apply text-4xl font-bold mb-4 transition-all duration-300;
-    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .dark .durian-brand:hover .durian-logo {
+    box-shadow: 0 8px 25px rgba(255, 149, 0, 0.4),
+      0 4px 12px rgba(255, 149, 0, 0.25);
   }
 
-  .durian-hero-subtitle {
-    @apply text-lg transition-colors duration-200;
-    color: var(--text-light);
-  }
-
-  .dark .durian-hero-title {
-    background: linear-gradient(135deg, #ffa726 0%, #ff7043 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+  /* 移除了 durian-hero 相关样式，因为不再需要 */
 
   .nav-link {
     @apply no-underline transition-colors duration-200;
@@ -225,7 +242,8 @@
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     &:hover {
       transform: translateY(-0.25rem);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
   }
 
@@ -294,7 +312,8 @@
   .durian-tool-preview {
     @apply mt-8 border border-border rounded-lg overflow-hidden transition-all duration-300;
     background-color: var(--background);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
 
   .durian-tool-preview-header {

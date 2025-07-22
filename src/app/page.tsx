@@ -37,13 +37,6 @@ export default function Home() {
       <Navbar />
 
       <main className="container py-8">
-        <div className="durian-hero">
-          <h1 className="durian-hero-title">榴莲工具</h1>
-          <p className="durian-hero-subtitle">
-            实用工具聚合平台，提升您的开发效率
-          </p>
-        </div>
-
         {/* 工具卡片网格 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           <div onClick={() => switchTool("todo")}>
