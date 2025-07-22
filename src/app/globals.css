@@ -130,6 +130,39 @@
     @apply flex items-center gap-4;
   }
 
+  .github-link {
+    @apply flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200 no-underline;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--text);
+  }
+
+  .github-link:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+    color: var(--text);
+  }
+
+  .github-icon {
+    @apply text-lg;
+  }
+
+  .logo-toggle-btn {
+    @apply flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200;
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--text);
+  }
+
+  .logo-toggle-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+  }
+
+  .toggle-icon {
+    @apply text-sm;
+  }
+
   .theme-toggle-btn {
     @apply flex items-center justify-center w-10 h-10 rounded-lg transition-all duration-200;
     background: rgba(0, 0, 0, 0.05);
@@ -162,6 +195,27 @@
 
   .dark .durian-subtitle {
     color: rgba(255, 255, 255, 0.7);
+  }
+
+  .dark .github-link {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+  }
+
+  .dark .github-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+  }
+
+  .dark .logo-toggle-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+  }
+
+  .dark .logo-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
   }
 
   .dark .theme-toggle-btn {

@@ -47,7 +47,7 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-username/durian-tools.git
+git clone https://github.com/wupinshuo/durian-tools.git
 cd durian-tools
 
 # 安装依赖
