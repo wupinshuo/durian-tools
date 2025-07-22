@@ -8,9 +8,7 @@ import {
   faCopy,
   faLightbulb,
   faCode,
-  faHome,
 } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
@@ -172,21 +170,8 @@ export default function JsonPage() {
       <Navbar />
       <div className="container py-4 flex-1">
         <div className="mx-auto" style={{ maxWidth: "56rem" }}>
-          {/* 面包屑导航 */}
-          <nav
-            className="flex items-center text-sm mb-4"
-            style={{ color: "var(--text-light)" }}
-          >
-            <Link href="/" className="hover:text-primary transition-colors">
-              <FontAwesomeIcon icon={faHome} className="mr-1" />
-              主页
-            </Link>
-            <span className="mx-2">/</span>
-            <span>JSON对比工具</span>
-          </nav>
-
           {/* 页面头部 */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold">JSON对比工具</h1>
           </div>
 

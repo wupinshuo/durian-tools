@@ -9,9 +9,7 @@ import {
   faEdit,
   faCheck,
   faClipboardList,
-  faHome,
 } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
@@ -170,21 +168,8 @@ export default function TodoPage() {
       <Navbar />
       <div className="container py-4 flex-1">
         <div className="mx-auto" style={{ maxWidth: "36rem" }}>
-          {/* 面包屑导航 */}
-          <nav
-            className="flex items-center text-sm mb-4"
-            style={{ color: "var(--text-light)" }}
-          >
-            <Link href="/" className="hover:text-primary transition-colors">
-              <FontAwesomeIcon icon={faHome} className="mr-1" />
-              主页
-            </Link>
-            <span className="mx-2">/</span>
-            <span>待办事项</span>
-          </nav>
-
           {/* 页面头部 */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold">待办事项</h1>
           </div>
 

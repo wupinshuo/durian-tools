@@ -13,9 +13,7 @@ import {
   faExclamationCircle,
   faCheckCircle,
   faInfoCircle,
-  faHome,
 } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
@@ -232,20 +230,7 @@ export default function JwtPage() {
       <Navbar />
       <div className="container py-4 flex-1">
         <div className="mx-auto" style={{ maxWidth: "48rem" }}>
-          {/* 面包屑导航 */}
-          <nav
-            className="flex items-center text-sm mb-4"
-            style={{ color: "var(--text-light)" }}
-          >
-            <Link href="/" className="hover:text-primary transition-colors">
-              <FontAwesomeIcon icon={faHome} className="mr-1" />
-              主页
-            </Link>
-            <span className="mx-2">/</span>
-            <span>JWT解析工具</span>
-          </nav>
-
-          <h1 className="text-2xl font-bold mb-4">JWT解析工具</h1>
+          <h1 className="text-2xl font-bold mb-6">JWT解析工具</h1>
 
           {/* JWT输入 */}
           <div className="mb-4">
