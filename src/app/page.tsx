@@ -7,6 +7,7 @@ import {
   faCheckCircle,
   faCode,
   faKey,
+  faTable,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -44,6 +45,13 @@ export default function Home() {
             description="解析JWT令牌的内容"
             icon={faKey}
             href="/jwt"
+          />
+
+          <ToolCard
+            title="CSV查询"
+            description="上传并查询CSV文件数据"
+            icon={faTable}
+            href="/csv"
           />
 
           <ToolCard

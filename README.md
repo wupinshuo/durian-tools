@@ -18,6 +18,13 @@
 - **待办事项管理** - 简洁高效的任务管理工具
 - **JSON 格式对比** - 可视化 JSON 数据差异对比
 - **JWT 令牌解析** - 解析和验证 JWT 令牌内容
+- **CSV 查询工具** - 功能强大的 CSV 文件在线查询分析工具
+  - 📁 本地文件上传解析
+  - 🔄 按字段智能排序 (数字/字符串)
+  - 👁️ 自定义字段显示/隐藏
+  - 📄 分页浏览大数据
+  - 🖼️ 导出表格为图片
+  - 📊 数据统计信息
 - **主题切换** - 支持亮色/暗色主题
 - **响应式设计** - 完美适配桌面和移动设备
 
@@ -33,6 +40,8 @@
 - **样式方案**: Tailwind CSS 3.4.1
 - **图标库**: FontAwesome 6.7.2
 - **主题管理**: next-themes 0.4.6
+- **CSV解析**: papaparse 5.5.3
+- **图片导出**: html2canvas 1.4.1
 - **包管理器**: pnpm
 - **Node.js**: 20.16.0
 
@@ -88,13 +97,29 @@ durian-tools/
 │   └── ...
 ├── src/                   # 源代码
 │   ├── app/              # Next.js App Router
+│   │   ├── csv/          # CSV 查询工具
+│   │   │   └── page.tsx
+│   │   ├── json/         # JSON 对比工具
+│   │   │   └── page.tsx
+│   │   ├── jwt/          # JWT 解析工具
+│   │   │   └── page.tsx
+│   │   ├── todo/         # 待办事项工具
+│   │   │   └── page.tsx
 │   │   ├── globals.css   # 全局样式
 │   │   ├── layout.tsx    # 根布局
 │   │   └── page.tsx      # 首页
-│   └── components/       # React 组件
-│       └── layout/       # 布局组件
-│           └── Navbar.tsx
-├── *.html                # 工具页面 (iframe 嵌入)
+│   ├── components/       # React 组件
+│   │   ├── layout/       # 布局组件
+│   │   │   ├── Footer.tsx
+│   │   │   └── Navbar.tsx
+│   │   └── ui/           # UI 组件
+│   │       ├── Alert.tsx
+│   │       ├── AlertContainer.tsx
+│   │       ├── FirstVisitGuide.tsx
+│   │       └── ToolCard.tsx
+│   └── types/            # 类型定义
+│       └── global.d.ts
+├── *.html                # 兼容性工具页面 (iframe 嵌入)
 ├── package.json          # 项目配置
 ├── tailwind.config.ts    # Tailwind 配置
 ├── tsconfig.json         # TypeScript 配置
@@ -121,9 +146,22 @@ durian-tools/
 
 ### 添加新工具
 
-1. 在根目录创建新的 HTML 文件 (如 `new-tool.html`)
-2. 在首页添加工具卡片
-3. 更新导航和路由配置
+1. 在 `src/app/` 目录下创建新的工具目录 (如 `new-tool/`)
+2. 创建 `page.tsx` 文件实现工具功能
+3. 在首页 (`src/app/page.tsx`) 添加工具卡片
+4. 在导航栏 (`src/components/layout/Navbar.tsx`) 添加导航链接
+
+### CSV 工具特性
+
+CSV 查询工具提供以下核心功能：
+
+- **文件解析**: 支持 UTF-8 编码的 CSV 文件上传
+- **智能排序**: 自动识别数字和字符串类型进行排序
+- **字段管理**: 可选择性显示/隐藏任意字段
+- **分页浏览**: 支持 25/50/100/200 条记录分页
+- **快速导航**: 首页/末页/页码跳转功能
+- **图片导出**: 将当前显示内容导出为高清 PNG 图片
+- **数据统计**: 实时显示记录数、字段数等信息
 
 ### 样式开发
 

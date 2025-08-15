@@ -14,6 +14,7 @@ import {
   faCheckCircle,
   faCode,
   faKey,
+  faTable,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
@@ -81,6 +82,13 @@ export default function Navbar() {
             >
               <FontAwesomeIcon icon={faKey} className="tool-nav-icon" />
               <span>JWT解析</span>
+            </Link>
+            <Link
+              href="/csv"
+              className={`tool-nav-link ${pathname === "/csv" ? "active" : ""}`}
+            >
+              <FontAwesomeIcon icon={faTable} className="tool-nav-icon" />
+              <span>CSV查询</span>
             </Link>
           </div>
         </div>
