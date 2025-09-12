@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFileUpload,
@@ -8,12 +8,12 @@ import {
   faDownload,
   faImage,
   faLink,
-  faCode,
   faEye,
   faEyeSlash,
   faArrowRight,
   faArrowLeft,
   faCopy,
+  faClipboard,
 } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -30,6 +30,68 @@ export default function ImagePage() {
   const [loading, setLoading] = useState(false);
   const [showPreview, setShowPreview] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 处理剪贴板粘贴
+  const handlePaste = useCallback(async () => {
+    try {
+      const clipboardItems = await navigator.clipboard.read();
+      
+      for (const clipboardItem of clipboardItems) {
+        for (const type of clipboardItem.types) {
+          if (type.startsWith('image/')) {
+            const blob = await clipboardItem.getType(type);
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+              const result = e.target?.result as string;
+              if (conversionMode === "toBase64") {
+                setBase64Output(result);
+                setPreviewSrc(result);
+                // 根据图片类型设置文件名
+                const fileExtension = type.split('/')[1] || 'png';
+                setFileName(`pasted-image.${fileExtension}`);
+                
+                if (window.showAlert) {
+                  window.showAlert("剪贴板图片粘贴成功", "success");
+                }
+              }
+            };
+            
+            reader.onerror = () => {
+              if (window.showAlert) {
+                window.showAlert("剪贴板图片读取失败", "error");
+              }
+            };
+            
+            reader.readAsDataURL(blob);
+            return; // 只处理第一个图片
+          }
+        }
+      }
+      
+      if (window.showAlert) {
+        window.showAlert("剪贴板中没有找到图片", "info");
+      }
+    } catch (error) {
+      console.error('Paste failed:', error);
+      if (window.showAlert) {
+        window.showAlert("粘贴失败，请确保浏览器支持剪贴板访问", "error");
+      }
+    }
+  }, [conversionMode]);
+
+  // 监听全局键盘事件
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'v' && conversionMode === "toBase64") {
+        e.preventDefault();
+        handlePaste();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [conversionMode, handlePaste]);
 
   // 处理文件上传
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -238,6 +300,7 @@ export default function ImagePage() {
             <div className="flex gap-4 p-1 border border-border rounded-lg w-fit"
                  style={{ backgroundColor: "var(--background-alt)" }}>
               <button
+                type="button"
                 onClick={() => setConversionMode("toBase64")}
                 className={`px-4 py-2 rounded-md transition-colors ${
                   conversionMode === "toBase64" 
@@ -252,6 +315,7 @@ export default function ImagePage() {
                 转换为Base64
               </button>
               <button
+                type="button"
                 onClick={() => setConversionMode("fromBase64")}
                 className={`px-4 py-2 rounded-md transition-colors ${
                   conversionMode === "fromBase64" 
@@ -308,12 +372,25 @@ export default function ImagePage() {
                     onChange={(e) => setImageUrl(e.target.value)}
                   />
                   <button 
+                    type="button"
                     onClick={handleUrlToBase64}
                     disabled={loading}
                     className="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <FontAwesomeIcon icon={loading ? faImage : faLink} className="mr-2" />
                     {loading ? "转换中..." : "转换"}
+                  </button>
+                </div>
+                
+                {/* 粘贴剪贴板按钮 */}
+                <div className="mt-3">
+                  <button 
+                    type="button"
+                    onClick={handlePaste}
+                    className="btn btn-outline"
+                  >
+                    <FontAwesomeIcon icon={faClipboard} className="mr-2" />
+                    粘贴剪贴板图片 (Ctrl+V)
                   </button>
                 </div>
               </div>
@@ -323,7 +400,7 @@ export default function ImagePage() {
                 <div className="mb-6">
                   <div className="flex items-center justify-between mb-3">
                     <h2 className="text-lg font-semibold">Base64输出</h2>
-                    <button onClick={copyBase64} className="btn btn-outline">
+                    <button type="button" onClick={copyBase64} className="btn btn-outline">
                       <FontAwesomeIcon icon={faCopy} className="mr-2" />
                       复制
                     </button>
@@ -358,6 +435,7 @@ export default function ImagePage() {
                   placeholder="粘贴Base64数据到这里...&#10;支持带前缀 (data:image/png;base64,xxx) 或纯Base64数据"
                 />
                 <button 
+                  type="button"
                   onClick={handleBase64ToImage}
                   className="btn btn-primary"
                 >
@@ -370,20 +448,21 @@ export default function ImagePage() {
 
           {/* 控制按钮 */}
           <div className="flex gap-2 mb-6">
-            <button onClick={clearAll} className="btn btn-outline">
+            <button type="button" onClick={clearAll} className="btn btn-outline">
               <FontAwesomeIcon icon={faEraser} className="mr-2" />
               清空数据
             </button>
             {previewSrc && (
               <>
                 <button 
+                  type="button"
                   onClick={() => setShowPreview(!showPreview)}
                   className="btn btn-outline"
                 >
                   <FontAwesomeIcon icon={showPreview ? faEyeSlash : faEye} className="mr-2" />
                   {showPreview ? "隐藏预览" : "显示预览"}
                 </button>
-                <button onClick={downloadImage} className="btn btn-secondary">
+                <button type="button" onClick={downloadImage} className="btn btn-secondary">
                   <FontAwesomeIcon icon={faDownload} className="mr-2" />
                   下载图片
                 </button>
@@ -426,6 +505,7 @@ export default function ImagePage() {
               <ul className="list-disc list-inside ml-4 space-y-1">
                 <li>支持上传本地图片文件 (JPG, PNG, GIF, WebP等格式)</li>
                 <li>支持输入图片URL链接进行在线转换</li>
+                <li>支持直接粘贴剪贴板中的图片 (Ctrl+V 或点击粘贴按钮)</li>
                 <li>转换后的Base64数据可直接复制使用</li>
               </ul>
               <p className="mt-3"><strong>从Base64转换:</strong></p>
@@ -433,6 +513,11 @@ export default function ImagePage() {
                 <li>支持标准的Base64图片数据 (带data:image前缀)</li>
                 <li>也支持纯Base64数据 (会自动尝试识别格式)</li>
                 <li>转换后可预览和下载为图片文件</li>
+              </ul>
+              <p className="mt-3"><strong>快捷操作:</strong></p>
+              <ul className="list-disc list-inside ml-4 space-y-1">
+                <li>在"转换为Base64"模式下，按 Ctrl+V (或 Cmd+V) 可快速粘贴剪贴板图片</li>
+                <li>支持从截图工具、图片编辑器等应用直接复制粘贴图片</li>
               </ul>
             </div>
           </div>

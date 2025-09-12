@@ -120,7 +120,7 @@ export default function Navbar() {
             type="button"
             className="theme-toggle-btn"
             onClick={toggleTheme}
-            aria-label={theme === "dark" ? "切换到亮色模式" : "切换到暗色模式"}
+            aria-label={mounted ? (theme === "dark" ? "切换到亮色模式" : "切换到暗色模式") : "切换主题"}
           >
             {mounted && (
               <FontAwesomeIcon
