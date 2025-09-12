@@ -8,6 +8,7 @@ import {
   faCode,
   faKey,
   faTable,
+  faImage,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -52,6 +53,13 @@ export default function Home() {
             description="上传并查询CSV文件数据"
             icon={faTable}
             href="/csv"
+          />
+
+          <ToolCard
+            title="图片转换"
+            description="图片与Base64相互转换"
+            icon={faImage}
+            href="/image"
           />
 
           <ToolCard

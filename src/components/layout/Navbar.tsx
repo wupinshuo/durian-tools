@@ -15,6 +15,7 @@ import {
   faCode,
   faKey,
   faTable,
+  faImage,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
@@ -89,6 +90,13 @@ export default function Navbar() {
             >
               <FontAwesomeIcon icon={faTable} className="tool-nav-icon" />
               <span>CSV查询</span>
+            </Link>
+            <Link
+              href="/image"
+              className={`tool-nav-link ${pathname === "/image" ? "active" : ""}`}
+            >
+              <FontAwesomeIcon icon={faImage} className="tool-nav-icon" />
+              <span>图片转换</span>
             </Link>
           </div>
         </div>
