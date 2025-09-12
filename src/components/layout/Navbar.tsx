@@ -9,20 +9,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMoon,
   faSun,
-  faEye,
-  faEyeSlash,
   faCheckCircle,
   faCode,
   faKey,
   faTable,
   faImage,
+  faLock,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 export default function Navbar() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [showLogo, setShowLogo] = useState(true);
+  const [showLogo] = useState(true);
   const pathname = usePathname();
 
   // 在组件挂载后才渲染主题切换按钮，避免水合不匹配
@@ -34,13 +33,9 @@ export default function Navbar() {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  const toggleLogo = () => {
-    setShowLogo(!showLogo);
-  };
-
   return (
     <nav className="durian-navbar">
-      <div className="container flex items-center justify-between">
+      <div className="container flex items-center">
         <div className="navbar-left flex items-center gap-8">
           {showLogo && (
             <Link href="/" className="durian-brand">
@@ -58,6 +53,9 @@ export default function Navbar() {
             </Link>
           )}
 
+        </div>
+        
+        <div className="navbar-center flex-1 flex justify-center">
           <div className="navbar-tools">
             <Link
               href="/todo"
@@ -93,34 +91,37 @@ export default function Navbar() {
             </Link>
             <Link
               href="/image"
-              className={`tool-nav-link ${pathname === "/image" ? "active" : ""}`}
+              className={`tool-nav-link ${
+                pathname === "/image" ? "active" : ""
+              }`}
             >
               <FontAwesomeIcon icon={faImage} className="tool-nav-icon" />
               <span>图片转换</span>
+            </Link>
+            <Link
+              href="/password"
+              className={`tool-nav-link ${
+                pathname === "/password" ? "active" : ""
+              }`}
+            >
+              <FontAwesomeIcon icon={faLock} className="tool-nav-icon" />
+              <span>随机密码</span>
             </Link>
           </div>
         </div>
 
         <div className="navbar-nav">
-          {/* <button
-            type="button"
-            className="logo-toggle-btn"
-            onClick={toggleLogo}
-            aria-label={showLogo ? "隐藏Logo" : "显示Logo"}
-          >
-            {mounted && (
-              <FontAwesomeIcon
-                icon={showLogo ? faEyeSlash : faEye}
-                className="toggle-icon"
-              />
-            )}
-          </button> */}
-
           <button
             type="button"
             className="theme-toggle-btn"
             onClick={toggleTheme}
-            aria-label={mounted ? (theme === "dark" ? "切换到亮色模式" : "切换到暗色模式") : "切换主题"}
+            aria-label={
+              mounted
+                ? theme === "dark"
+                  ? "切换到亮色模式"
+                  : "切换到暗色模式"
+                : "切换主题"
+            }
           >
             {mounted && (
               <FontAwesomeIcon
