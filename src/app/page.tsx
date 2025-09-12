@@ -9,6 +9,7 @@ import {
   faKey,
   faTable,
   faImage,
+  faLock,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -60,6 +61,13 @@ export default function Home() {
             description="图片与Base64相互转换"
             icon={faImage}
             href="/image"
+          />
+
+          <ToolCard
+            title="随机密码"
+            description="生成安全的随机密码"
+            icon={faLock}
+            href="/password"
           />
 
           <ToolCard
