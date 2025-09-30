@@ -15,6 +15,7 @@ import {
   faTable,
   faImage,
   faLock,
+  faClock,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
@@ -106,6 +107,15 @@ export default function Navbar() {
             >
               <FontAwesomeIcon icon={faLock} className="tool-nav-icon" />
               <span>随机密码</span>
+            </Link>
+            <Link
+              href="/timestamp"
+              className={`tool-nav-link ${
+                pathname === "/timestamp" ? "active" : ""
+              }`}
+            >
+              <FontAwesomeIcon icon={faClock} className="tool-nav-icon" />
+              <span>时间戳</span>
             </Link>
           </div>
         </div>

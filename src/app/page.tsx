@@ -10,6 +10,7 @@ import {
   faTable,
   faImage,
   faLock,
+  faClock,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -68,6 +69,13 @@ export default function Home() {
             description="生成安全的随机密码"
             icon={faLock}
             href="/password"
+          />
+
+          <ToolCard
+            title="时间戳转换"
+            description="时间戳与日期时间相互转换"
+            icon={faClock}
+            href="/timestamp"
           />
 
           <ToolCard
